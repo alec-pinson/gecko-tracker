@@ -1,0 +1,40 @@
+<!-- new_sale.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Sale</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <!-- Link to the CSS file -->
+  </head>
+  <body>
+    <div class="container">
+      <h1>Add Sale</h1>
+      <form method="POST">
+        <label for="buyer">Buyer:</label>
+        <input type="text" id="buyer" name="buyer"><br />
+
+        <label for="source">Source:</label>
+        <input type="text" id="source" name="source"><br />
+
+        <label for="male">Males Sold</label>
+        <input type="number" id="male" name="male" min="1" max="6" value="0" required />
+
+        <label for="female">Females Sold</label>
+        <input type="number" id="female" name="female" min="1" max="6" value="0" required />
+
+        <label for="baby">Babies Sold</label>
+        <input type="number" id="baby" name="baby" min="1" max="6" value="0" required />
+
+        <label for="price">Total Price (£)</label>
+        <input type="number" id="price" name="price" required />
+
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required />
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>

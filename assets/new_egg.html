@@ -1,0 +1,31 @@
+<!-- new_egg.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Egg</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <!-- Link to the CSS file -->
+  </head>
+  <body>
+    <div class="container">
+      <h1>Add Egg</h1>
+      <form method="POST">
+        <label for="gecko">Gecko</label>
+        <input type="number" id="gecko" name="gecko" min="1" max="6" value="1" required />
+
+        <label for="eggCount">Number of Eggs</label>
+        <input type="number" id="eggCount" name="eggCount" min="1" max="2" value="2" required />
+
+        <label for="slotId">Egg Slot</label>
+        <input type="number" id="slotId" name="slotId" min="1" max="6" required />
+
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required />
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>

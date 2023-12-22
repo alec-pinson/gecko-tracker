@@ -1,0 +1,11 @@
+github.com/google/go-cmp v0.5.2 h1:X2ev0eStA3AbceY54o37/0PQ/UWqKEiiO2dKL5OPaFM=
+github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+github.com/google/go-querystring v1.1.0 h1:AnCroh3fv4ZBgVIf1Iwtovgjaw/GiKJo8M8yD/fhyJ8=
+github.com/google/go-querystring v1.1.0/go.mod h1:Kcdr2DB4koayq7X8pmAG4sNG59So17icRSOU623lUBU=
+github.com/segmentio/pointer v0.0.0-20230626212407-f23d1c5c8e77 h1:wTPnCMWHQJjqQIEpYxFtzdo3R7725tvfv3gEW8XgEMw=
+github.com/segmentio/pointer v0.0.0-20230626212407-f23d1c5c8e77/go.mod h1:+4DA5YbNGo85y02v8eKi+5jRkcbjNActTs6jzkb3pMY=
+github.com/zemirco/couchdb v0.0.0-20170316052722-83ed906ea1f0 h1:ncfUNmGoXbRQh2DKhjVQf1vJhm8njrTLJM9rCKytF3U=
+github.com/zemirco/couchdb v0.0.0-20170316052722-83ed906ea1f0/go.mod h1:2lfF+r2iYeSFAqVaSPmeojqCjuQvBWkwzD5lQIkGO8w=
+github.com/zemirco/uid v0.0.0-20160129141151-3763f3c45832 h1:NFzxrkF7I0/279WuZocYwF+ApZL9bMoLhoPi+H35Y4E=
+github.com/zemirco/uid v0.0.0-20160129141151-3763f3c45832/go.mod h1:F5gG5+oHA+576dKL4mEf0NxBfMjf/yNNV6lVAC85Y8U=
+golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=

@@ -1,0 +1,115 @@
+/* Reset some default browser styles */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.navbar {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.navbar a {
+  color: #007bff; /* Set link color */
+  text-decoration: none; /* Remove underline from links */
+  padding: 5px 10px; /* Add padding around links */
+  margin: 5px 0 5px 5px; /* Space between links */
+  background-color: #f8f9fa; /* Light background for links */
+  border: 1px solid #ddd; /* Light border for links */
+  border-radius: 5px; /* Rounded corners for links */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+
+.navbar a:hover {
+  background-color: #e2e6ea; /* Darker background on hover */
+  color: #0056b3; /* Darker color on hover */
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="textarea"],
+input[type="number"],
+input[type="date"] {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Style the table */
+table {
+  width: 100%;
+  max-width: 600px; /* Limit the table width for readability */
+  margin: 5px 0 5px 5px; /* Add left margin and vertical spacing */
+  background-color: #ffffff; /* White background */
+  border-collapse: collapse;
+  border: 1px solid #ddd; /* Light gray border */
+}
+
+/* Style the table cells */
+td.egg-slot {
+  padding: 10px;
+  border: 1px solid #ddd; /* Add a light gray border around cells */
+  position: relative; /* Enable positioning of hover details */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  text-align: left;
+}
+
+/* Define the hover details */
+td.egg-slot::before {
+  content: attr(data-details); /* Display the details as a pseudo-element */
+  position: absolute;
+  white-space: pre;
+  top: 100%; /* Position below the cell */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  background-color: rgba(0, 0, 0, 1); /* Opaque black background */
+  color: #fff; /* White text color */
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.2;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000; /* High z-index to bring to front */
+  pointer-events: none; /* Avoid blocking interactions */
+}
+
+/* Show hover details on hover */
+td.egg-slot:hover::before {
+  visibility: visible;
+  opacity: 1;
+}

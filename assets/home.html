@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Gecko Egg Tracker</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Egg</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <!-- Link to the CSS file -->
+  </head>
+  <body>
+    <div class="navbar-container">
+      <nav class="navbar">
+        <a href="newGecko" class="link">New Gecko</a>
+        <a href="newEgg" class="link">New Egg</a>
+        <a href="newSale" class="link">New Sale</a>
+        <p></p>
+        <b>Next Lay Date:</b> {{ .NextLayDate }}<br>
+        <b>Next Hatch Date:</b> {{ .NextHatchDate }}<br>
+        <b>Total Sales:</b> {{ .TotalSales }}<br>
+      </nav>
+    </div>
+    <div class="table-container">
+      <table>
+        <tr>
+          {{ if .Slot1.Gecko }}
+          <td class="egg-slot" data-details="
+Laid by: {{ .Slot1.Gecko }}
+Lay Date: {{ .Slot1.LayDate }}
+Egg Count: {{ .Slot1.EggCount }}
+Hatch ETA: {{ .Slot1.HatchEta }}
+          ">
+          {{ else }}
+          <td class="egg-slot" data-details="Empty">
+          {{ end }}
+            <span class="label">Egg Slot 1</span>
+          </td>
+          {{ if .Slot2.Gecko }}
+          <td class="egg-slot" data-details="
+Laid by: {{ .Slot2.Gecko }}
+Lay Date: {{ .Slot2.LayDate }}
+Egg Count: {{ .Slot2.EggCount }}
+Hatch ETA: {{ .Slot2.HatchEta }}
+          ">
+          {{ else }}
+          <td class="egg-slot" data-details="Empty">
+          {{ end }}
+            <span class="label">Egg Slot 2</span>
+          </td>
+        </tr>
+        <tr>
+          {{ if .Slot3.Gecko }}
+          <td class="egg-slot" data-details="
+Laid by: {{ .Slot3.Gecko }}
+Lay Date: {{ .Slot3.LayDate }}
+Egg Count: {{ .Slot3.EggCount }}
+Hatch ETA: {{ .Slot3.HatchEta }}
+          ">
+          {{ else }}
+          <td class="egg-slot" data-details="Empty">
+          {{ end }}
+            <span class="label">Egg Slot 3</span>
+          </td>
+          {{ if .Slot4.Gecko }}
+          <td class="egg-slot" data-details="
+Laid by: {{ .Slot4.Gecko }}
+Lay Date: {{ .Slot4.LayDate }}
+Egg Count: {{ .Slot4.EggCount }}
+Hatch ETA: {{ .Slot4.HatchEta }}
+          ">
+          {{ else }}
+          <td class="egg-slot" data-details="Empty">
+          {{ end }}
+            <span class="label">Egg Slot 4</span>
+          </td>
+        </tr>
+        <tr>
+          {{ if .Slot5.Gecko }}
+          <td class="egg-slot" data-details="
+Laid by: {{ .Slot5.Gecko }}
+Lay Date: {{ .Slot5.LayDate }}
+Egg Count: {{ .Slot5.EggCount }}
+Hatch ETA: {{ .Slot5.HatchEta }}
+          ">
+          {{ else }}
+          <td class="egg-slot" data-details="Empty">
+          {{ end }}
+            <span class="label">Egg Slot 5</span>
+          </td>
+          {{ if .Slot6.Gecko }}
+          <td class="egg-slot" data-details="
+Laid by: {{ .Slot6.Gecko }}
+Lay Date: {{ .Slot6.LayDate }}
+Egg Count: {{ .Slot6.EggCount }}
+Hatch ETA: {{ .Slot6.HatchEta }}
+          ">
+          {{ else }}
+          <td class="egg-slot" data-details="Empty">
+          {{ end }}
+            <span class="label">Egg Slot 6</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
