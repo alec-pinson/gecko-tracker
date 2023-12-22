@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -13,7 +15,14 @@ type Gecko struct {
 
 var LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later
 
-func AddGecko(id int, description string) *Gecko {
+func AddGecko(id int, description string) (*Gecko, error) {
+	// Check if a gecko with the same ID already exists
+	for _, existingGecko := range geckos {
+		if existingGecko.Id == id {
+			return nil, errors.New("Gecko with the same ID already exists")
+		}
+	}
+
 	var gecko Gecko
 	gecko.Id = id
 	gecko.Description = description
@@ -21,18 +30,17 @@ func AddGecko(id int, description string) *Gecko {
 
 	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
 
-	return &gecko
+	return &gecko, nil
 }
 
-func GetGecko(id int) Gecko {
+func GetGecko(id int) (Gecko, error) {
 	for _, gecko := range geckos {
 		if gecko.Id == id {
-			return gecko
+			return gecko, nil
 		}
 	}
 	log.Println("Gecko not found: " + strconv.Itoa(id))
-	var geckoNotFound Gecko
-	return geckoNotFound
+	return Gecko{}, fmt.Errorf("Gecko not found with ID: %d", id)
 }
 
 func (gecko Gecko) GetLastLayDate() time.Time {

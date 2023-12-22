@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -13,10 +14,23 @@ type EggSlot struct {
 	LayDate  string
 	HatchEta string
 }
+type TemplateData struct {
+	Eggs          []Egg
+	NextLayDate   string
+	NextHatchDate string
+	TotalSales    string
+}
 
 var geckos []Gecko
 var eggs []Egg
 var sales []Sale
+
+func mod(i, j int) int {
+	return i % j
+}
+func add(i, j int) int {
+	return i + j
+}
 
 func main() {
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/styles.css") })
@@ -25,61 +39,27 @@ func main() {
 	http.HandleFunc("/newGecko", newGecko)
 	http.HandleFunc("/newSale", newSale)
 	http.ListenAndServe(":8080", nil)
+
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
-	tpl := template.Must(template.ParseFiles("assets/home.html"))
-	tpl.Execute(w, struct {
-		TotalSales    string
-		NextLayDate   string
-		NextHatchDate string
-		Slot1         EggSlot
-		Slot2         EggSlot
-		Slot3         EggSlot
-		Slot4         EggSlot
-		Slot5         EggSlot
-		Slot6         EggSlot
-	}{
-		TotalSales:    TotalSales(),
+	funcMap := template.FuncMap{
+		"mod": mod,
+		"add": add,
+	}
+	for i := range eggs {
+		eggs[i].FormattedLayDate = eggs[i].LayDate.Format("02-01-2006")
+		eggs[i].FormattedHatchDateETA = GetHatchETAString(&eggs[i]) // Assuming HatchDate is the ETA
+	}
+	data := TemplateData{
+		Eggs:          eggs,
 		NextLayDate:   GetNextLayDateInfo(),
 		NextHatchDate: GetNextHatchDateInfo(),
-		Slot1: EggSlot{
-			Gecko:    GetEgg(1).GeckoID,
-			EggCount: GetEgg(1).Count,
-			LayDate:  GetEgg(1).GetLayDateString(),
-			HatchEta: GetEgg(1).GetHatchETAString(),
-		},
-		Slot2: EggSlot{
-			Gecko:    GetEgg(2).GeckoID,
-			EggCount: GetEgg(2).Count,
-			LayDate:  GetEgg(2).GetLayDateString(),
-			HatchEta: GetEgg(2).GetHatchETAString(),
-		},
-		Slot3: EggSlot{
-			Gecko:    GetEgg(3).GeckoID,
-			EggCount: GetEgg(3).Count,
-			LayDate:  GetEgg(3).GetLayDateString(),
-			HatchEta: GetEgg(3).GetHatchETAString(),
-		},
-		Slot4: EggSlot{
-			Gecko:    GetEgg(4).GeckoID,
-			EggCount: GetEgg(4).Count,
-			LayDate:  GetEgg(4).GetLayDateString(),
-			HatchEta: GetEgg(4).GetHatchETAString(),
-		},
-		Slot5: EggSlot{
-			Gecko:    GetEgg(5).GeckoID,
-			EggCount: GetEgg(5).Count,
-			LayDate:  GetEgg(5).GetLayDateString(),
-			HatchEta: GetEgg(5).GetHatchETAString(),
-		},
-		Slot6: EggSlot{
-			Gecko:    GetEgg(6).GeckoID,
-			EggCount: GetEgg(6).Count,
-			LayDate:  GetEgg(6).GetLayDateString(),
-			HatchEta: GetEgg(6).GetHatchETAString(),
-		},
-	})
+		TotalSales:    TotalSales(),
+	}
+
+	tpl := template.Must(template.New("home.html").Funcs(funcMap).ParseFiles("assets/home.html"))
+	tpl.Execute(w, data)
 }
 
 func newGecko(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +70,10 @@ func newGecko(w http.ResponseWriter, r *http.Request) {
 	}
 
 	geckoId, _ := strconv.Atoi(r.FormValue("geckoId"))
-	AddGecko(geckoId, r.FormValue("description"))
+	_, err := AddGecko(geckoId, r.FormValue("description"))
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
@@ -98,15 +81,19 @@ func newGecko(w http.ResponseWriter, r *http.Request) {
 func newEgg(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.ParseFiles("assets/new_egg.html"))
 	if r.Method != http.MethodPost {
-		tpl.Execute(w, nil)
+		var availableGeckos []int
+		for _, gecko := range geckos {
+			availableGeckos = append(availableGeckos, gecko.Id)
+		}
+		tpl.Execute(w, map[string]interface{}{
+			"AvailableGeckos": availableGeckos,
+		})
 		return
 	}
-
-	slotId, _ := strconv.Atoi(r.FormValue("slotId"))
 	geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 	eggCount, _ := strconv.Atoi(r.FormValue("eggCount"))
 	date, _ := time.Parse("2006-01-02", r.FormValue("date"))
-	AddEgg(slotId, geckoId, eggCount, date.Format("02/01/2006"), "")
+	AddEgg(geckoId, eggCount, date.Format("02/01/2006"), "")
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -127,18 +114,14 @@ func GetNextLayDateInfo() string {
 
 func GetNextHatchDateInfo() string {
 	var HatchETA time.Time = time.Now().Add(time.Hour * 99999)
-	var slotId int = 0
 	for _, egg := range eggs {
-		if egg.SlotId != 0 {
-			// only eggs that are incubating
-			if egg.GetHatchETA().Before(HatchETA) {
-				HatchETA = egg.GetHatchETA()
-				slotId = egg.SlotId
-			}
+		if egg.GetHatchETA().Before(HatchETA) {
+			HatchETA = egg.GetHatchETA()
 		}
+
 	}
 
-	return HatchETA.Format("02-01-2006") + " (slot " + strconv.Itoa(slotId) + ")"
+	return HatchETA.Format("02-01-2006")
 }
 
 func newSale(w http.ResponseWriter, r *http.Request) {
