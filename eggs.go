@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 )
 
 type Egg struct {
+	EggID                 string
 	GeckoID               int       `json:"geckoId"`
 	Count                 int       `json:"count"`
 	LayDate               time.Time `json:"layDate"`
@@ -15,10 +17,18 @@ type Egg struct {
 	FormattedHatchDateETA string
 }
 
+func generateUniqueID() string {
+	currentTime := time.Now().UnixNano() / int64(time.Millisecond)
+	uniqueID := fmt.Sprintf("%d", currentTime)
+
+	return uniqueID
+}
+
 var HatchTime, _ = time.ParseDuration("1440h") // hatch eta 60 days, will automatically generate from average of eggs later
 
 func AddEgg(geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
 	var egg Egg
+	egg.EggID = generateUniqueID()
 	egg.GeckoID = geckoId
 	egg.Count = eggCount
 	LayDate, err := time.Parse("02/01/2006", layDate)
