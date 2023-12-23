@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -31,6 +32,12 @@ func mod(i, j int) int {
 func add(i, j int) int {
 	return i + j
 }
+func sortEggsByGeckoID(eggs []Egg) []Egg {
+	sort.SliceStable(eggs, func(i, j int) bool {
+		return eggs[i].GeckoID < eggs[j].GeckoID
+	})
+	return eggs
+}
 
 func main() {
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/styles.css") })
@@ -44,8 +51,9 @@ func main() {
 
 func homepage(w http.ResponseWriter, r *http.Request) {
 	funcMap := template.FuncMap{
-		"mod": mod,
-		"add": add,
+		"mod":               mod,
+		"add":               add,
+		"sortEggsByGeckoID": sortEggsByGeckoID,
 	}
 	for i := range eggs {
 		eggs[i].FormattedLayDate = eggs[i].LayDate.Format("02-01-2006")
