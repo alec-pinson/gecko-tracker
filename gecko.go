@@ -9,7 +9,7 @@ import (
 )
 
 type Gecko struct {
-	Id          int
+	ID          int
 	Description string
 }
 
@@ -18,13 +18,13 @@ var LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatical
 func AddGecko(id int, description string) (*Gecko, error) {
 	// Check if a gecko with the same ID already exists
 	for _, existingGecko := range geckos {
-		if existingGecko.Id == id {
+		if existingGecko.ID == id {
 			return nil, errors.New("Gecko with the same ID already exists")
 		}
 	}
 
 	var gecko Gecko
-	gecko.Id = id
+	gecko.ID = id
 	gecko.Description = description
 	geckos = append(geckos, gecko)
 
@@ -35,7 +35,7 @@ func AddGecko(id int, description string) (*Gecko, error) {
 
 func GetGecko(id int) (Gecko, error) {
 	for _, gecko := range geckos {
-		if gecko.Id == id {
+		if gecko.ID == id {
 			return gecko, nil
 		}
 	}
@@ -62,7 +62,7 @@ func (gecko Gecko) GetLayETA() time.Time {
 func (gecko Gecko) GetLayHistory() []Egg {
 	var eggsLaid []Egg
 	for _, egg := range eggs {
-		if egg.GeckoID == gecko.Id {
+		if egg.GeckoID == gecko.ID {
 			eggsLaid = append(eggsLaid, egg)
 		}
 	}

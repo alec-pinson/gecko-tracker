@@ -12,26 +12,30 @@
     <div class="container">
       <h1>Add Sale</h1>
       <form method="POST">
-        <label for="buyer">Buyer:</label>
+        <label for="buyer">Buyer</label>
         <input type="text" id="buyer" name="buyer"><br />
 
-        <label for="source">Source:</label>
-        <input type="text" id="source" name="source"><br />
+        <label for="source">Source</label>
+        <select id="source" name="source" required>
+          {{range .AvailableSources}}
+          <option value="{{.}}">{{.}}</option>
+          {{end}}
+        </select>
 
         <label for="male">Males Sold</label>
-        <input type="number" id="male" name="male" min="1" max="6" value="0" required />
+        <input type="number" id="male" name="male" min="0" max="10" value="0" required />
 
         <label for="female">Females Sold</label>
-        <input type="number" id="female" name="female" min="1" max="6" value="0" required />
+        <input type="number" id="female" name="female" min="0" max="10" value="0" required />
 
         <label for="baby">Babies Sold</label>
-        <input type="number" id="baby" name="baby" min="1" max="6" value="0" required />
+        <input type="number" id="baby" name="baby" min="0" max="10" value="0" required />
 
         <label for="price">Total Price (£)</label>
         <input type="number" id="price" name="price" required />
 
         <label for="date">Date</label>
-        <input type="date" id="date" name="date" required />
+        <input type="date" id="date" name="date" value="{{ .TodaysDate }}" required />
 
         <button type="submit">Submit</button>
       </form>

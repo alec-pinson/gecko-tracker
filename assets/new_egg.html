@@ -19,6 +19,17 @@
           {{end}}
         </select>
 
+        <label for="slotId">Incubator Slot Number</label>
+        <input
+          type="number"
+          id="slotId"
+          name="slotId"
+          min="1"
+          max="6"
+          value="1"
+          required
+        />
+
         <label for="eggCount">Number of Eggs</label>
         <input
           type="number"
@@ -31,7 +42,7 @@
         />
 
         <label for="date">Date</label>
-        <input type="date" id="date" name="date" required />
+        <input type="date" id="date" name="date" value="{{ .TodaysDate }}" required />
 
         <button type="submit">Submit</button>
       </form>

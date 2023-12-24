@@ -32,7 +32,11 @@
             {{if eq (mod $index 2) 0}}
               <tr>
             {{end}}
-            <td class="egg-slot" data-details="Eggs Entry ID: {{ $element.EggID }} Lay Date: {{ $element.FormattedLayDate }} Hatch ETA: {{ $element.FormattedHatchDateETA }}">
+            <td class="egg-slot" data-details="
+Incubator Slot ID: {{ $element.SlotID }}
+Lay Date: {{ $element.FormattedLayDate }}
+Hatch ETA: {{ $element.FormattedHatchDateETA }}
+            ">
               <span class="label">Gecko {{ $element.GeckoID }} ({{ $element.Count }} eggs)</span>
             </td>
             {{if eq (mod $index 2) 1}}
@@ -44,7 +48,7 @@
           {{end}}
         {{else}}
           <tr>
-            <td colspan="2">No eggs available.</td>
+            <td colspan="2">No eggs waiting to hatch.</td>
           </tr>
         {{end}}
       </table>

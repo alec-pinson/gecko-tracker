@@ -3,18 +3,20 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 )
 
 type Egg struct {
-	EggID                 string
+	ID                    string
+	SlotID                int       `json:"slotId"` // slot position in the incubator
 	GeckoID               int       `json:"geckoId"`
 	Count                 int       `json:"count"`
 	LayDate               time.Time `json:"layDate"`
-	FormattedLayDate      string
+	FormattedLayDate      string    `json:"formattedLayDate"`
 	HasHatched            bool      `json:"hasHatched"`
 	HatchDate             time.Time `json:"hatchDate"`
-	FormattedHatchDateETA string
+	FormattedHatchDateETA string    `json:"formattedHatchDateETA"`
 }
 
 func generateUniqueID() string {
@@ -26,9 +28,10 @@ func generateUniqueID() string {
 
 var HatchTime, _ = time.ParseDuration("1440h") // hatch eta 60 days, will automatically generate from average of eggs later
 
-func AddEgg(geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
+func AddEgg(slotId int, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
 	var egg Egg
-	egg.EggID = generateUniqueID()
+	egg.ID = generateUniqueID()
+	egg.SlotID = slotId
 	egg.GeckoID = geckoId
 	egg.Count = eggCount
 	LayDate, err := time.Parse("02/01/2006", layDate)
@@ -43,7 +46,11 @@ func AddEgg(geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
 		}
 		egg.HatchDate = HatchDate
 	}
+	egg.FormattedLayDate = egg.LayDate.Format("02-01-2006")
+	egg.FormattedHatchDateETA = egg.GetHatchETAString() // Assuming HatchDate is the ETA
 	eggs = append(eggs, egg)
+
+	log.Println("Added new egg to slot " + strconv.Itoa(egg.SlotID))
 
 	// AddEggToDB(egg)
 
@@ -63,6 +70,6 @@ func (egg *Egg) GetHatchETA() time.Time {
 	return egg.LayDate.Add(HatchTime)
 }
 
-func GetHatchETAString(egg *Egg) string {
+func (egg *Egg) GetHatchETAString() string {
 	return egg.GetHatchETA().Format("02-01-2006")
 }
