@@ -1,14 +1,17 @@
-/* Reset some default browser styles */
+* {
+  color: black;
+}
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
+  display: block;
+  position: absolute;
+  top: 20px; /* Adjust the top margin as needed */
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
 }
 
 .navbar {
@@ -30,11 +33,64 @@ body {
   background-color: #e2e6ea; /* Darker background on hover */
   color: #0056b3; /* Darker color on hover */
 }
+/* Style the table */
+table {
+  width: fit-content;
+  margin: 5px 0 5px 5px; /* Add left margin and vertical spacing */
+  background-color: #ffffff; /* White background */
+  border-collapse: collapse;
+  border: 1px solid #ddd; /* Light gray border */
+  display: block; /* Change display property to block */
+  margin-top: 10px; /* Add top margin to separate from labels */
+}
+
+td.egg-slot {
+  padding: 10px;
+  border: 1px solid #ddd;
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  color: black;
+}
+
+td.egg-slot::before {
+  content: attr(data-details);
+  position: absolute;
+  width: max-content;
+  white-space: pre-wrap;
+  text-align: left;
+  top: 100%;
+  left: 0;
+  transform: translateX(0);
+  background-color: rgba(0, 0, 0, 1);
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.2;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Show hover details on hover */
+td.egg-slot:hover::before {
+  visibility: visible;
+  opacity: 1;
+}
+b {
+  padding: 5px;
+  margin-bottom: 5px;
+}
 
 .container {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   width: 300px;
 }
@@ -42,6 +98,11 @@ body {
 label {
   display: block;
   margin-bottom: 5px;
+}
+textarea {
+  width: 250px;
+  height: 100px;
+  resize: none;
 }
 
 input[type="text"],
@@ -53,6 +114,9 @@ input[type="date"] {
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+b {
+  color: black;
 }
 
 button[type="submit"] {
@@ -68,48 +132,31 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-/* Style the table */
-table {
-  width: 100%;
-  max-width: 600px; /* Limit the table width for readability */
-  margin: 5px 0 5px 5px; /* Add left margin and vertical spacing */
-  background-color: #ffffff; /* White background */
-  border-collapse: collapse;
-  border: 1px solid #ddd; /* Light gray border */
+select {
+  width: 80%; /* Match the width of other input elements */
+  padding: 10px; /* Padding for comfort */
+  margin-bottom: 15px; /* Spacing below the select box */
+  border: 1px solid #ccc; /* Light gray border, similar to input fields */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  color: black; /* Text color */
+  cursor: pointer; /* Cursor style */
 }
 
-/* Style the table cells */
-td.egg-slot {
-  padding: 10px;
-  border: 1px solid #ddd; /* Add a light gray border around cells */
-  position: relative; /* Enable positioning of hover details */
-  cursor: pointer; /* Change cursor to pointer on hover */
-  text-align: left;
+/* Style for options inside the select */
+select option {
+  padding: 10px; /* Padding inside options */
+  background-color: #fff; /* White background for options */
+  color: black; /* Text color for options */
 }
 
-/* Define the hover details */
-td.egg-slot::before {
-  content: attr(data-details); /* Display the details as a pseudo-element */
-  position: absolute;
-  white-space: pre;
-  top: 100%; /* Position below the cell */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Center horizontally */
-  background-color: rgba(0, 0, 0, 1); /* Opaque black background */
-  color: #fff; /* White text color */
-  padding: 5px;
-  border-radius: 5px;
-  font-size: 14px;
-  line-height: 1.2;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 1000; /* High z-index to bring to front */
-  pointer-events: none; /* Avoid blocking interactions */
+/* Style for select when hovered */
+select:hover {
+  border-color: #007bff; /* Change border color on hover */
 }
 
-/* Show hover details on hover */
-td.egg-slot:hover::before {
-  visibility: visible;
-  opacity: 1;
+/* Style for select when focused */
+select:focus {
+  outline: none; /* Remove the default focus outline */
+  border-color: #0056b3; /* Change border color when focused */
 }

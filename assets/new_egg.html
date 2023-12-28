@@ -13,16 +13,54 @@
       <h1>Add Egg</h1>
       <form method="POST">
         <label for="gecko">Gecko</label>
-        <input type="number" id="gecko" name="gecko" min="1" max="6" value="1" required />
+        <select id="gecko" name="gecko" required>
+          {{range .AvailableGeckos}}
+          <option value="{{.}}">Gecko {{.}}</option>
+          {{end}}
+        </select>
+
+        <label for="slotId">Incubator Slot</label>
+        <input
+          type="text"
+          id="slotId"
+          name="slotId"
+          {{ if .Row }}
+            value="{{.Row}},{{.Column}}"
+          {{ else }}
+            value=""
+          {{ end }}
+          required
+          disabled
+        />
+
+        <div class="table-container">
+          <table>
+            {{ range $_, $row := N 1 .IncubatorSize.Rows }}
+            <tr>
+              {{ range $_, $column := N 1 $.IncubatorSize.Columns }}
+              <td class="egg-slot" data-details="">
+                <span class="label"><a href="?row={{$row}}&column={{$column}}">Egg Slot</a></span>
+              </td>
+              {{ end }}
+            </tr>
+            {{ end }}
+          </table>
+        </div>
+        <br>
 
         <label for="eggCount">Number of Eggs</label>
-        <input type="number" id="eggCount" name="eggCount" min="1" max="2" value="2" required />
-
-        <label for="slotId">Egg Slot</label>
-        <input type="number" id="slotId" name="slotId" min="1" max="6" required />
+        <input
+          type="number"
+          id="eggCount"
+          name="eggCount"
+          min="1"
+          max="2"
+          value="2"
+          required
+        />
 
         <label for="date">Date</label>
-        <input type="date" id="date" name="date" required />
+        <input type="date" id="date" name="date" value="{{ .TodaysDate }}" required />
 
         <button type="submit">Submit</button>
       </form>

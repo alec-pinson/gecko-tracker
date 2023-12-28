@@ -1,25 +1,38 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"time"
 )
 
 type Egg struct {
-	SlotId     int       `json:"slotId"`
-	GeckoID    int       `json:"geckoId"`
-	Count      int       `json:"count"`
-	LayDate    time.Time `json:"layDate"`
-	HasHatched bool      `json:"hasHatched"`
-	HatchDate  time.Time `json:"hatchDate"`
+	ID                    string
+	Incubator             Grid      `json:"incubator"` // slot position in the incubator
+	GeckoID               int       `json:"geckoId"`
+	Count                 int       `json:"count"`
+	LayDate               time.Time `json:"layDate"`
+	FormattedLayDate      string    `json:"formattedLayDate"`
+	HasHatched            bool      `json:"hasHatched"`
+	HatchDate             time.Time `json:"hatchDate"`
+	FormattedHatchDateETA string    `json:"formattedHatchDateETA"`
+}
+
+func generateUniqueID() string {
+	currentTime := time.Now().UnixNano() / int64(time.Millisecond)
+	uniqueID := fmt.Sprintf("%d", currentTime)
+
+	return uniqueID
 }
 
 var HatchTime, _ = time.ParseDuration("1440h") // hatch eta 60 days, will automatically generate from average of eggs later
 
-func AddEgg(slotId int, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
+func AddEgg(row int, column, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
 	var egg Egg
-	egg.SlotId = slotId
+	egg.ID = generateUniqueID()
+	egg.Incubator.Row = row
+	egg.Incubator.Column = column
 	egg.GeckoID = geckoId
 	egg.Count = eggCount
 	LayDate, err := time.Parse("02/01/2006", layDate)
@@ -34,23 +47,15 @@ func AddEgg(slotId int, geckoId int, eggCount int, layDate string, hatchDate str
 		}
 		egg.HatchDate = HatchDate
 	}
+	egg.FormattedLayDate = egg.LayDate.Format("02-01-2006")
+	egg.FormattedHatchDateETA = egg.GetHatchETAString() // Assuming HatchDate is the ETA
 	eggs = append(eggs, egg)
 
-	log.Println("Added new egg to slot " + strconv.Itoa(egg.SlotId))
+	log.Println("Added new egg to slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
-	AddEggToDB(egg)
+	// AddEggToDB(egg)
 
 	return &egg
-}
-
-func GetEgg(slotId int) *Egg {
-	for _, egg := range eggs {
-		if egg.SlotId == slotId {
-			return &egg
-		}
-	}
-	var eggNotFound Egg
-	return &eggNotFound
 }
 
 func (egg *Egg) GetLayDateString() string {
