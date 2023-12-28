@@ -97,7 +97,7 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 	geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 	eggCount, _ := strconv.Atoi(r.FormValue("eggCount"))
 	date, _ := time.Parse("2006-01-02", r.FormValue("date"))
-	AddEgg(incubatorId, row, column, geckoId, eggCount, date.Format("02/01/2006"), "")
+	AddEgg(incubatorId, row, column, geckoId, eggCount, date.Format("02/01/2006"))
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)

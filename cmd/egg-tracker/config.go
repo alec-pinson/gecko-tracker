@@ -12,6 +12,7 @@ type Config struct {
 		Url      string
 		Username string
 		Password string
+		Name     string
 	}
 	Sources   []string
 	HatchTime time.Duration
@@ -21,6 +22,7 @@ var config Config
 
 func LoadConfiguration() {
 	config.Database.Url = os.Getenv("DATABASE_URL")
+	config.Database.Name = os.Getenv("DATABASE_NAME")
 	config.Database.Username = os.Getenv("DATABASE_USERNAME")
 	config.Database.Password = os.Getenv("DATABASE_PASSWORD")
 

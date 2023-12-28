@@ -9,8 +9,8 @@ import (
 )
 
 type Gecko struct {
-	ID          int
-	Description string
+	ID          int    `json:"id"`
+	Description string `json:"description"`
 }
 
 var LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later

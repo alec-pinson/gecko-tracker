@@ -8,7 +8,7 @@ import (
 )
 
 type Egg struct {
-	ID          string
+	ID          string   `json:"id"`
 	IncubatorID int      `json:"incubatorId"`
 	Incubator   struct { // slot position in the incubator
 		Row    int `json:"row"`
@@ -30,7 +30,7 @@ func generateUniqueID() string {
 	return uniqueID
 }
 
-func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
+func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate string) *Egg {
 	var egg Egg
 	egg.ID = generateUniqueID()
 	egg.IncubatorID = incubatorId
@@ -43,13 +43,7 @@ func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate
 		log.Println(err)
 	}
 	egg.LayDate = LayDate
-	if hatchDate != "" {
-		HatchDate, err := time.Parse("02/01/2006", hatchDate)
-		if err != nil {
-			log.Println(err)
-		}
-		egg.HatchDate = HatchDate
-	}
+	egg.HatchDate = egg.GetHatchETA()
 	egg.FormattedLayDate = egg.LayDate.Format("02-01-2006")
 	egg.FormattedHatchDateETA = egg.GetHatchETAString()
 	eggs = append(eggs, egg)

@@ -6,9 +6,9 @@ import (
 )
 
 type Incubator struct {
-	ID      int
-	Rows    int
-	Columns int
+	ID      int `json:"id"`
+	Rows    int `json:"rows"`
+	Columns int `json:"columns"`
 }
 
 func AddIncubator(rows int, columns int) *Incubator {

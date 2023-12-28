@@ -7,13 +7,13 @@ import (
 )
 
 type Sale struct {
-	Buyer      string
-	Source     string
-	Male       int
-	Female     int
-	Baby       int
-	TotalPrice int
-	Date       time.Time
+	Buyer      string    `json:"buyer"`
+	Source     string    `json:"source"`
+	Male       int       `json:"male"`
+	Female     int       `json:"female"`
+	Baby       int       `json:"baby"`
+	TotalPrice int       `json:"totalPrice"`
+	Date       time.Time `json:"date"`
 }
 
 func AddSale(buyer string, source string, male int, female int, baby int, totalPrice int, date string) *Sale {

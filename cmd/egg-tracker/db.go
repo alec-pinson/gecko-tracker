@@ -31,7 +31,7 @@ func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale 
 	}
 
 	// use database and create a document
-	db := client.Use("eggs")
+	db := client.Use(config.Database.Name)
 	doc := &CouchDBDocument{
 		Type:      dataType,
 		Gecko:     gecko,
@@ -74,9 +74,11 @@ func LoadFromDB() {
 	}
 
 	// create the database if it doesnt exist
-	client.Create("eggs")
+	client.Create(config.Database.Name)
 
-	db := client.Use("eggs")
+	log.Printf("Connected to Database %s%s with username '%s'", config.Database.Url, config.Database.Name, config.Database.Username)
+
+	db := client.Use(config.Database.Name)
 	result, _ := db.AllDocs(&couchdb.QueryParameters{IncludeDocs: &[]bool{true}[0]})
 	var data CouchDBDocument
 	for _, row := range result.Rows {

@@ -9,6 +9,7 @@ Supports saving data to couchdb, required variables are:-
 DATABASE_URL="https://my.couchdb.url/"
 DATABASE_USERNAME="my-couchdb-username"
 DATABASE_PASSWORD="my-couchdb-password"
+DATABASE_NAME="eggs"
 ```
 
 ## Option to override default sale sources:-
