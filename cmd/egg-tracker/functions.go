@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -54,4 +56,15 @@ func sortEggsIntoGrid(eggs []Egg) map[string]Egg {
 
 func toSlotID(incubatorId int, row int, column int) string {
 	return fmt.Sprintf("%s,%s,%s", strconv.Itoa(incubatorId), strconv.Itoa(row), strconv.Itoa(column))
+}
+
+func DaysToHours(days string) string {
+	iDays, err := strconv.Atoi(strings.TrimSuffix(days, "d"))
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
+	iHours := iDays * 24
+
+	return strconv.Itoa(iHours) + "h"
 }

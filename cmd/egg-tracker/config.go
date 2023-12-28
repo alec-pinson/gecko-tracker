@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 type Config struct {
@@ -12,7 +13,8 @@ type Config struct {
 		Username string
 		Password string
 	}
-	Sources []string
+	Sources   []string
+	HatchTime time.Duration
 }
 
 var config Config
@@ -29,4 +31,15 @@ func LoadConfiguration() {
 		config.Sources = []string{"Preloved", "Facebook"}
 	}
 	log.Println("Configured Sale Sources: " + strings.Join(config.Sources, ", "))
+
+	if os.Getenv("HATCH_DAYS") != "" {
+		hatchTime, err := time.ParseDuration(DaysToHours(os.Getenv("HATCH_DAYS"))) // hatch eta 60 days, will automatically generate from average of eggs later
+		if err != nil {
+			log.Println(err)
+		}
+		config.HatchTime = hatchTime
+	} else {
+		config.HatchTime, _ = time.ParseDuration("1440h") // hatch eta 60 days, will automatically generate from average of eggs later
+	}
+	log.Println("Configured hatch time is " + config.HatchTime.String())
 }

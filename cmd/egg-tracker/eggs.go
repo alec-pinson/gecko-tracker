@@ -30,8 +30,6 @@ func generateUniqueID() string {
 	return uniqueID
 }
 
-var HatchTime, _ = time.ParseDuration("1440h") // hatch eta 60 days, will automatically generate from average of eggs later
-
 func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
 	var egg Egg
 	egg.ID = generateUniqueID()
@@ -93,7 +91,7 @@ func (egg *Egg) Hatched() {
 }
 
 func (egg *Egg) GetHatchETA() time.Time {
-	return egg.LayDate.Add(HatchTime)
+	return egg.LayDate.Add(config.HatchTime)
 }
 
 func (egg *Egg) GetHatchETAString() string {
