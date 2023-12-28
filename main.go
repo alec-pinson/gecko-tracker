@@ -4,13 +4,6 @@ import (
 	"net/http"
 )
 
-type TemplateData struct {
-	Eggs          []Egg
-	NextLayDate   string
-	NextHatchDate string
-	TotalSales    string
-}
-
 type Grid struct {
 	Rows    int
 	Columns int

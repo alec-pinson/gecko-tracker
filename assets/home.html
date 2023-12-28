@@ -24,35 +24,33 @@
         <br />
       </nav>
     </div>
+
     <div class="table-container">
       <table>
-        {{if len .Eggs}}
-          {{ $sortedEggs := sortEggsByGeckoID .Eggs}}
-          {{range $index, $element := $sortedEggs}}
-            {{if eq (mod $index 2) 0}}
-              <tr>
-            {{end}}
-            <td class="egg-slot" data-details="
-Incubator Position: {{ $element.Incubator.Row }},{{ $element.Incubator.Column }}
-Lay Date: {{ $element.FormattedLayDate }}
-Hatch ETA: {{ $element.FormattedHatchDateETA }}
-            ">
-              <span class="label">Gecko {{ $element.GeckoID }} ({{ $element.Count }} eggs)</span>
-            </td>
-            {{if eq (mod $index 2) 1}}
-              </tr>
-            {{end}}
-          {{end}}
-          {{if ne (mod (len $sortedEggs) 2) 0}}
-            </tr>
-          {{end}}
-        {{else}}
-          <tr>
-            <td colspan="2">No eggs waiting to hatch.</td>
-          </tr>
-        {{end}}
+        {{ $sortedEggs := sortEggsIntoGrid .Eggs}}
+        {{ range $_, $row := N 1 .IncubatorSize.Rows }}
+        <tr>
+          {{ range $_, $column := N 1 $.IncubatorSize.Columns }}
+          {{ $slotID := toSlotID $row $column }}
+          {{ $egg := (index $sortedEggs $slotID) }}
+          {{ if ne $egg.Incubator.Column 0 }}
+          <td class="egg-slot" data-details="
+          Gecko ID: {{ $egg.GeckoID }}
+          Lay Date: {{ $egg.FormattedLayDate }}
+          Hatch ETA: {{ $egg.FormattedHatchDateETA }}
+          ">
+            <span class="label">Egg</span>
+          </td>
+          {{ else }}
+          <td class="egg-slot" data-details="">
+            <span class="label">No Egg</span>
+          </td>
+          {{ end }}
+          {{ end }}
+        </tr>
+        {{ end }}
       </table>
-      
     </div>
+
   </body>
 </html>

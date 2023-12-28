@@ -1,7 +1,7 @@
 package main
 
 import (
-	"sort"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -31,19 +31,6 @@ func GetNextHatchDateInfo() string {
 	return HatchETA.Format("02-01-2006")
 }
 
-func mod(i, j int) int {
-	return i % j
-}
-func add(i, j int) int {
-	return i + j
-}
-func sortEggsByGeckoID(eggs []Egg) []Egg {
-	sort.SliceStable(eggs, func(i, j int) bool {
-		return eggs[i].GeckoID < eggs[j].GeckoID
-	})
-	return eggs
-}
-
 func N(start, end int) (stream chan int) {
 	stream = make(chan int)
 	go func() {
@@ -53,4 +40,18 @@ func N(start, end int) (stream chan int) {
 		close(stream)
 	}()
 	return
+}
+
+func sortEggsIntoGrid(eggs []Egg) map[string]Egg {
+	eggMap := make(map[string]Egg)
+
+	for _, egg := range eggs {
+		eggMap[strconv.Itoa(egg.Incubator.Row)+","+strconv.Itoa(egg.Incubator.Column)] = egg
+	}
+
+	return eggMap
+}
+
+func toSlotID(row int, column int) string {
+	return fmt.Sprintf("%s,%s", strconv.Itoa(row), strconv.Itoa(column))
 }

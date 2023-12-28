@@ -10,10 +10,17 @@ import (
 )
 
 var funcMap = template.FuncMap{
-	"mod":               mod,
-	"add":               add,
-	"sortEggsByGeckoID": sortEggsByGeckoID,
-	"N":                 N,
+	"sortEggsIntoGrid": sortEggsIntoGrid,
+	"toSlotID":         toSlotID,
+	"N":                N,
+}
+
+type TemplateData struct {
+	Eggs          []Egg
+	NextLayDate   string
+	NextHatchDate string
+	TotalSales    string
+	IncubatorSize Grid
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +35,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		NextLayDate:   GetNextLayDateInfo(),
 		NextHatchDate: GetNextHatchDateInfo(),
 		TotalSales:    TotalSales(),
+		IncubatorSize: incubatorSize,
 	}
 
 	tpl := template.Must(template.New("home.html").Funcs(funcMap).ParseFiles("assets/home.html"))
