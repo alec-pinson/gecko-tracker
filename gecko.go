@@ -30,6 +30,19 @@ func AddGecko(id int, description string) (*Gecko, error) {
 
 	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
 
+	WriteToDB("gecko", gecko, Incubator{}, Egg{}, Sale{})
+
+	return &gecko, nil
+}
+
+func LoadGecko(id int, description string) (*Gecko, error) {
+	var gecko Gecko
+	gecko.ID = id
+	gecko.Description = description
+	geckos = append(geckos, gecko)
+
+	log.Println("Loaded gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
+
 	return &gecko, nil
 }
 

@@ -19,6 +19,13 @@
           {{end}}
         </select>
 
+        <label for="incubator">Incubator</label>
+        <select id="incubator" name="incubator" onchange="refreshEggLayout()">
+          {{range .AvailableIncubators}}
+          <option value="{{.ID}}" {{ if eq $.SelectedIncubator .ID }}selected="selected"{{ end }}>Incubator {{.ID}}</option>
+          {{end}}
+        </select>
+
         <label for="slotId">Incubator Slot</label>
         <input
           type="text"
@@ -32,14 +39,22 @@
           required
           disabled
         />
+  
+        <script>
+        function refreshEggLayout() {
+          var val = document.getElementById("incubator").value;
+          document.location.href='?incubator='+val
+        }
+        </script>
 
+        {{ $incubator := (index .AvailableIncubators .SelectedIncubator) }}
         <div class="table-container">
           <table>
-            {{ range $_, $row := N 1 .IncubatorSize.Rows }}
+            {{ range $_, $row := N 1 $incubator.Rows }}
             <tr>
-              {{ range $_, $column := N 1 $.IncubatorSize.Columns }}
+              {{ range $_, $column := N 1 $incubator.Columns }}
               <td class="egg-slot" data-details="">
-                <span class="label"><a href="?row={{$row}}&column={{$column}}">Egg Slot</a></span>
+                <span class="label"><a href="?incubator={{$incubator.ID}}&row={{$row}}&column={{$column}}">Egg Slot</a></span>
               </td>
               {{ end }}
             </tr>
