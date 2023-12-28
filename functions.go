@@ -46,12 +46,12 @@ func sortEggsIntoGrid(eggs []Egg) map[string]Egg {
 	eggMap := make(map[string]Egg)
 
 	for _, egg := range eggs {
-		eggMap[strconv.Itoa(egg.Incubator.Row)+","+strconv.Itoa(egg.Incubator.Column)] = egg
+		eggMap[strconv.Itoa(egg.IncubatorID)+","+strconv.Itoa(egg.Incubator.Row)+","+strconv.Itoa(egg.Incubator.Column)] = egg
 	}
 
 	return eggMap
 }
 
-func toSlotID(row int, column int) string {
-	return fmt.Sprintf("%s,%s", strconv.Itoa(row), strconv.Itoa(column))
+func toSlotID(incubatorId int, row int, column int) string {
+	return fmt.Sprintf("%s,%s,%s", strconv.Itoa(incubatorId), strconv.Itoa(row), strconv.Itoa(column))
 }

@@ -20,7 +20,7 @@ type TemplateData struct {
 	NextLayDate   string
 	NextHatchDate string
 	TotalSales    string
-	IncubatorSize Grid
+	Incubators    []Incubator
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +35,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		NextLayDate:   GetNextLayDateInfo(),
 		NextHatchDate: GetNextHatchDateInfo(),
 		TotalSales:    TotalSales(),
-		IncubatorSize: incubatorSize,
+		Incubators:    incubators,
 	}
 
 	tpl := template.Must(template.New("home.html").Funcs(funcMap).ParseFiles("assets/home.html"))
@@ -84,12 +84,13 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	incubatorId, _ := strconv.Atoi(r.FormValue("incubator"))
 	row, _ := strconv.Atoi(r.FormValue("row"))
 	column, _ := strconv.Atoi(r.FormValue("column"))
 	geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 	eggCount, _ := strconv.Atoi(r.FormValue("eggCount"))
 	date, _ := time.Parse("2006-01-02", r.FormValue("date"))
-	AddEgg(row, column, geckoId, eggCount, date.Format("02/01/2006"), "")
+	AddEgg(incubatorId, row, column, geckoId, eggCount, date.Format("02/01/2006"), "")
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -114,6 +115,24 @@ func newSale(w http.ResponseWriter, r *http.Request) {
 	price, _ := strconv.Atoi(r.FormValue("price"))
 	date, _ := time.Parse("2006-01-02", r.FormValue("date"))
 	AddSale(r.FormValue("buyer"), r.FormValue("source"), male, female, baby, price, date.Format("02/01/2006"))
+
+	// tpl.Execute(w, struct{ Success bool }{true})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func newIncubator(w http.ResponseWriter, r *http.Request) {
+	tpl := template.Must(template.ParseFiles("assets/new_incubator.html"))
+	if r.Method != http.MethodPost {
+		err := tpl.Execute(w, map[string]interface{}{})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	rows, _ := strconv.Atoi(r.FormValue("rows"))
+	columns, _ := strconv.Atoi(r.FormValue("columns"))
+	AddIncubator(rows, columns)
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)

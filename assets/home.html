@@ -13,6 +13,7 @@
     <div class="navbar-container">
       <nav class="navbar">
         <a href="newGecko" class="link">New Gecko</a>
+        <a href="newIncubator" class="link">New Incubator</a>
         <a href="newEgg" class="link">New Egg</a>
         <a href="newSale" class="link">New Sale</a>
         <p></p>
@@ -25,32 +26,34 @@
       </nav>
     </div>
 
+    {{ range $_, $incubator := .Incubators }}
     <div class="table-container">
       <table>
-        {{ $sortedEggs := sortEggsIntoGrid .Eggs}}
-        {{ range $_, $row := N 1 .IncubatorSize.Rows }}
+        {{ $sortedEggs := sortEggsIntoGrid $.Eggs}}
+        {{ range $_, $row := N 1 $incubator.Rows }}
         <tr>
-          {{ range $_, $column := N 1 $.IncubatorSize.Columns }}
-          {{ $slotID := toSlotID $row $column }}
-          {{ $egg := (index $sortedEggs $slotID) }}
-          {{ if ne $egg.Incubator.Column 0 }}
-          <td class="egg-slot" data-details="
-          Gecko ID: {{ $egg.GeckoID }}
-          Lay Date: {{ $egg.FormattedLayDate }}
-          Hatch ETA: {{ $egg.FormattedHatchDateETA }}
-          ">
-            <span class="label">Egg</span>
-          </td>
-          {{ else }}
-          <td class="egg-slot" data-details="">
-            <span class="label">No Egg</span>
-          </td>
-          {{ end }}
+          {{ range $_, $column := N 1 $incubator.Columns }}
+            {{ $slotID := toSlotID $incubator.ID $row $column }}
+            {{ $egg := (index $sortedEggs $slotID) }}
+            {{ if ne $egg.Incubator.Column 0 }}
+              <td class="egg-slot" data-details="
+Gecko ID: {{ $egg.GeckoID }}
+Lay Date: {{ $egg.FormattedLayDate }}
+Hatch ETA: {{ $egg.FormattedHatchDateETA }}
+              ">
+                <span class="label">Egg</span>
+              </td>
+            {{ else }}
+              <td class="egg-slot" data-details="">
+                <span class="label">No Egg</span>
+              </td>
+            {{ end }}
           {{ end }}
         </tr>
         {{ end }}
       </table>
     </div>
+    {{ end }}
 
   </body>
 </html>
