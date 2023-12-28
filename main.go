@@ -4,13 +4,6 @@ import (
 	"net/http"
 )
 
-type Grid struct {
-	Rows    int
-	Columns int
-	Row     int
-	Column  int
-}
-
 var geckos []Gecko
 var incubators []Incubator
 var eggs []Egg

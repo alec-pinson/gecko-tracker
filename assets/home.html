@@ -41,7 +41,11 @@ Gecko ID: {{ $egg.GeckoID }}
 Lay Date: {{ $egg.FormattedLayDate }}
 Hatch ETA: {{ $egg.FormattedHatchDateETA }}
               ">
-                <span class="label">Egg</span>
+              {{ if eq $egg.Count 1 }}
+                <span class="label">1 Egg</span>
+              {{ else }}
+                <span class="label">{{ $egg.Count }} Eggs</span>
+              {{ end }}
               </td>
             {{ else }}
               <td class="egg-slot" data-details="">

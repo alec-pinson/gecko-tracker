@@ -8,9 +8,12 @@ import (
 )
 
 type Egg struct {
-	ID                    string
-	IncubatorID           int       `json:"incubatorId"`
-	Incubator             Grid      `json:"incubator"` // slot position in the incubator
+	ID          string
+	IncubatorID int      `json:"incubatorId"`
+	Incubator   struct { // slot position in the incubator
+		Row    int `json:"incubatorRow"`
+		Column int `json:"incubatorColumn"`
+	}
 	GeckoID               int       `json:"geckoId"`
 	Count                 int       `json:"count"`
 	LayDate               time.Time `json:"layDate"`
