@@ -30,6 +30,21 @@
           required
         />
 
+        <div class="table-container">
+          <table>
+            {{ range $_, $row := N 1 .IncubatorSize.Rows }}
+            <tr>
+              {{ range $_, $column := N 1 $.IncubatorSize.Columns }}
+              <td class="egg-slot" data-details="">
+                <span class="label"><a href="#slot{{$row}},{{$column}}">Egg Slot {{$row}},{{$column}}</a></span>
+              </td>
+              {{ end }}
+            </tr>
+            {{ end }}
+          </table>
+        </div>
+        <br>
+
         <label for="eggCount">Number of Eggs</label>
         <input
           type="number"

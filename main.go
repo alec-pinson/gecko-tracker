@@ -11,10 +11,19 @@ type TemplateData struct {
 	TotalSales    string
 }
 
+type Grid struct {
+	Rows    int
+	Columns int
+}
+
 var geckos []Gecko
 var eggs []Egg
 var sales []Sale
 var availableSources = []string{"Preloved", "Facebook"}
+var incubatorSize Grid = Grid{
+	Rows:    3,
+	Columns: 2,
+}
 
 func main() {
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/styles.css") })
@@ -23,5 +32,4 @@ func main() {
 	http.HandleFunc("/newGecko", newGecko)
 	http.HandleFunc("/newSale", newSale)
 	http.ListenAndServe(":8080", nil)
-
 }

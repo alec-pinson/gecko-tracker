@@ -3,18 +3,20 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-func homepage(w http.ResponseWriter, r *http.Request) {
-	funcMap := template.FuncMap{
-		"mod":               mod,
-		"add":               add,
-		"sortEggsByGeckoID": sortEggsByGeckoID,
-	}
+var funcMap = template.FuncMap{
+	"mod":               mod,
+	"add":               add,
+	"sortEggsByGeckoID": sortEggsByGeckoID,
+	"N":                 N,
+}
 
+func homepage(w http.ResponseWriter, r *http.Request) {
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
 		if egg.SlotID != 0 {
@@ -49,16 +51,20 @@ func newGecko(w http.ResponseWriter, r *http.Request) {
 }
 
 func newEgg(w http.ResponseWriter, r *http.Request) {
-	tpl := template.Must(template.ParseFiles("assets/new_egg.html"))
+	tpl := template.Must(template.New("new_egg.html").Funcs(funcMap).ParseFiles("assets/new_egg.html"))
 	if r.Method != http.MethodPost {
 		var availableGeckos []int
 		for _, gecko := range geckos {
 			availableGeckos = append(availableGeckos, gecko.ID)
 		}
-		tpl.Execute(w, map[string]interface{}{
+		err := tpl.Execute(w, map[string]interface{}{
 			"AvailableGeckos": availableGeckos,
 			"TodaysDate":      time.Now().Format("2006-01-02"),
+			"IncubatorSize":   incubatorSize,
 		})
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
