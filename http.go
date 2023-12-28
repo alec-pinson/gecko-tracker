@@ -14,8 +14,15 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		"add":               add,
 		"sortEggsByGeckoID": sortEggsByGeckoID,
 	}
+
+	var incubatingEggs []Egg
+	for _, egg := range eggs {
+		if egg.SlotID != 0 {
+			incubatingEggs = append(incubatingEggs, egg)
+		}
+	}
 	data := TemplateData{
-		Eggs:          eggs,
+		Eggs:          incubatingEggs,
 		NextLayDate:   GetNextLayDateInfo(),
 		NextHatchDate: GetNextHatchDateInfo(),
 		TotalSales:    TotalSales(),
