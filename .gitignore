@@ -20,3 +20,4 @@
 # Go workspace file
 go.work
 .DS_Store
+cmd/egg-tracker/egg-tracker

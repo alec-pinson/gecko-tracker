@@ -1,0 +1,28 @@
+name: test
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20.1
+      -
+        name: Vet
+        run: cd cmd/egg-tracker && go vet
+      -
+        name: Build
+        run: cd cmd/egg-tracker && go build -v
+      -
+        name: Test
+        run: cd cmd/egg-tracker && go test -v
