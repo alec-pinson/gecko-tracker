@@ -71,12 +71,19 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		for _, gecko := range geckos {
 			availableGeckos = append(availableGeckos, gecko.ID)
 		}
+		var availableIncubators map[int]Incubator
+		availableIncubators = make(map[int]Incubator)
+		for _, incubator := range incubators {
+			availableIncubators[incubator.ID] = incubator
+		}
+		incubatorId, _ := strconv.Atoi(r.FormValue("incubator"))
 		err := tpl.Execute(w, map[string]interface{}{
-			"AvailableGeckos": availableGeckos,
-			"TodaysDate":      time.Now().Format("2006-01-02"),
-			"IncubatorSize":   incubatorSize,
-			"Row":             r.FormValue("row"),
-			"Column":          r.FormValue("column"),
+			"AvailableGeckos":     availableGeckos,
+			"AvailableIncubators": availableIncubators,
+			"TodaysDate":          time.Now().Format("2006-01-02"),
+			"SelectedIncubator":   incubatorId,
+			"Row":                 r.FormValue("row"),
+			"Column":              r.FormValue("column"),
 		})
 		if err != nil {
 			log.Println(err)

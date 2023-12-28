@@ -16,10 +16,6 @@ var incubators []Incubator
 var eggs []Egg
 var sales []Sale
 var availableSources = []string{"Preloved", "Facebook"}
-var incubatorSize Grid = Grid{
-	Rows:    3,
-	Columns: 2,
-}
 
 func main() {
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/styles.css") })
