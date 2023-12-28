@@ -8,7 +8,6 @@ var geckos []Gecko
 var incubators []Incubator
 var eggs []Egg
 var sales []Sale
-var availableSources = []string{"Preloved", "Facebook"}
 
 func main() {
 	LoadConfiguration()

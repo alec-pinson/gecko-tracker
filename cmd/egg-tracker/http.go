@@ -107,7 +107,7 @@ func newSale(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.ParseFiles("assets/new_sale.html"))
 	if r.Method != http.MethodPost {
 		err := tpl.Execute(w, map[string]interface{}{
-			"AvailableSources": availableSources,
+			"AvailableSources": config.Sources,
 			"TodaysDate":       time.Now().Format("2006-01-02"),
 		})
 		if err != nil {
