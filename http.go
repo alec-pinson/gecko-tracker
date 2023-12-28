@@ -19,7 +19,7 @@ var funcMap = template.FuncMap{
 func homepage(w http.ResponseWriter, r *http.Request) {
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
-		if egg.SlotID != 0 {
+		if egg.Incubator.Column != 0 {
 			incubatingEggs = append(incubatingEggs, egg)
 		}
 	}
@@ -67,6 +67,8 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 			"AvailableGeckos": availableGeckos,
 			"TodaysDate":      time.Now().Format("2006-01-02"),
 			"IncubatorSize":   incubatorSize,
+			"Row":             r.FormValue("row"),
+			"Column":          r.FormValue("column"),
 		})
 		if err != nil {
 			log.Println(err)
@@ -74,11 +76,12 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	slotId, _ := strconv.Atoi(r.FormValue("slotId"))
+	row, _ := strconv.Atoi(r.FormValue("row"))
+	column, _ := strconv.Atoi(r.FormValue("column"))
 	geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 	eggCount, _ := strconv.Atoi(r.FormValue("eggCount"))
 	date, _ := time.Parse("2006-01-02", r.FormValue("date"))
-	AddEgg(slotId, geckoId, eggCount, date.Format("02/01/2006"), "")
+	AddEgg(row, column, geckoId, eggCount, date.Format("02/01/2006"), "")
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)

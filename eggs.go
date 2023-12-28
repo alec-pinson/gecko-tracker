@@ -9,7 +9,7 @@ import (
 
 type Egg struct {
 	ID                    string
-	SlotID                int       `json:"slotId"` // slot position in the incubator
+	Incubator             Grid      `json:"incubator"` // slot position in the incubator
 	GeckoID               int       `json:"geckoId"`
 	Count                 int       `json:"count"`
 	LayDate               time.Time `json:"layDate"`
@@ -28,10 +28,11 @@ func generateUniqueID() string {
 
 var HatchTime, _ = time.ParseDuration("1440h") // hatch eta 60 days, will automatically generate from average of eggs later
 
-func AddEgg(slotId int, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
+func AddEgg(row int, column, geckoId int, eggCount int, layDate string, hatchDate string) *Egg {
 	var egg Egg
 	egg.ID = generateUniqueID()
-	egg.SlotID = slotId
+	egg.Incubator.Row = row
+	egg.Incubator.Column = column
 	egg.GeckoID = geckoId
 	egg.Count = eggCount
 	LayDate, err := time.Parse("02/01/2006", layDate)
@@ -50,7 +51,7 @@ func AddEgg(slotId int, geckoId int, eggCount int, layDate string, hatchDate str
 	egg.FormattedHatchDateETA = egg.GetHatchETAString() // Assuming HatchDate is the ETA
 	eggs = append(eggs, egg)
 
-	log.Println("Added new egg to slot " + strconv.Itoa(egg.SlotID))
+	log.Println("Added new egg to slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
 	// AddEggToDB(egg)
 

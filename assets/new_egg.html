@@ -19,15 +19,18 @@
           {{end}}
         </select>
 
-        <label for="slotId">Incubator Slot Number</label>
+        <label for="slotId">Incubator Slot</label>
         <input
-          type="number"
+          type="text"
           id="slotId"
           name="slotId"
-          min="1"
-          max="6"
-          value="1"
+          {{ if .Row }}
+            value="{{.Row}},{{.Column}}"
+          {{ else }}
+            value=""
+          {{ end }}
           required
+          disabled
         />
 
         <div class="table-container">
@@ -36,7 +39,7 @@
             <tr>
               {{ range $_, $column := N 1 $.IncubatorSize.Columns }}
               <td class="egg-slot" data-details="">
-                <span class="label"><a href="#slot{{$row}},{{$column}}">Egg Slot {{$row}},{{$column}}</a></span>
+                <span class="label"><a href="?row={{$row}}&column={{$column}}">Egg Slot</a></span>
               </td>
               {{ end }}
             </tr>

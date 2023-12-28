@@ -14,6 +14,8 @@ type TemplateData struct {
 type Grid struct {
 	Rows    int
 	Columns int
+	Row     int
+	Column  int
 }
 
 var geckos []Gecko
