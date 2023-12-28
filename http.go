@@ -31,13 +31,19 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tpl := template.Must(template.New("home.html").Funcs(funcMap).ParseFiles("assets/home.html"))
-	tpl.Execute(w, data)
+	err := tpl.Execute(w, data)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func newGecko(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.ParseFiles("assets/new_gecko.html"))
 	if r.Method != http.MethodPost {
-		tpl.Execute(w, nil)
+		err := tpl.Execute(w, nil)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
@@ -81,10 +87,13 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 func newSale(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.ParseFiles("assets/new_sale.html"))
 	if r.Method != http.MethodPost {
-		tpl.Execute(w, map[string]interface{}{
+		err := tpl.Execute(w, map[string]interface{}{
 			"AvailableSources": availableSources,
 			"TodaysDate":       time.Now().Format("2006-01-02"),
 		})
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
