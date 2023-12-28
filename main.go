@@ -11,6 +11,9 @@ var sales []Sale
 var availableSources = []string{"Preloved", "Facebook"}
 
 func main() {
+	LoadConfiguration()
+	LoadFromDB()
+
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/styles.css") })
 	http.HandleFunc("/", homepage)
 	http.HandleFunc("/newIncubator", newIncubator)

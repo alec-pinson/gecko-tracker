@@ -34,6 +34,25 @@ func AddSale(buyer string, source string, male int, female int, baby int, totalP
 
 	log.Println("Added new sale £" + strconv.Itoa(sale.TotalPrice))
 
+	WriteToDB("sale", Gecko{}, Incubator{}, Egg{}, sale)
+
+	return &sale
+}
+
+func LoadSale(buyer string, source string, male int, female int, baby int, totalPrice int, date time.Time) *Sale {
+	var sale Sale
+	sale.Buyer = buyer
+	sale.Source = source
+	sale.Male = male
+	sale.Female = female
+	sale.Baby = baby
+	sale.TotalPrice = totalPrice
+	sale.Date = date
+
+	sales = append(sales, sale)
+
+	log.Println("Loaded sale £" + strconv.Itoa(sale.TotalPrice))
+
 	return &sale
 }
 

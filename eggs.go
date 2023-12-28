@@ -11,9 +11,9 @@ type Egg struct {
 	ID          string
 	IncubatorID int      `json:"incubatorId"`
 	Incubator   struct { // slot position in the incubator
-		Row    int `json:"incubatorRow"`
-		Column int `json:"incubatorColumn"`
-	}
+		Row    int `json:"row"`
+		Column int `json:"column"`
+	} `json:"incubator"`
 	GeckoID               int       `json:"geckoId"`
 	Count                 int       `json:"count"`
 	LayDate               time.Time `json:"layDate"`
@@ -53,12 +53,32 @@ func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate
 		egg.HatchDate = HatchDate
 	}
 	egg.FormattedLayDate = egg.LayDate.Format("02-01-2006")
-	egg.FormattedHatchDateETA = egg.GetHatchETAString() // Assuming HatchDate is the ETA
+	egg.FormattedHatchDateETA = egg.GetHatchETAString()
 	eggs = append(eggs, egg)
 
 	log.Println("Added new egg to incubator " + strconv.Itoa(egg.IncubatorID) + " slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
-	// AddEggToDB(egg)
+	WriteToDB("egg", Gecko{}, Incubator{}, egg, Sale{})
+
+	return &egg
+}
+
+func LoadEgg(id string, incubatorId int, row int, column, geckoId int, eggCount int, layDate time.Time, hatchDate time.Time, formattedLayDate string, formattedHatchDate string, hasHatched bool) *Egg {
+	var egg Egg
+	egg.ID = id
+	egg.IncubatorID = incubatorId
+	egg.Incubator.Row = row
+	egg.Incubator.Column = column
+	egg.GeckoID = geckoId
+	egg.Count = eggCount
+	egg.LayDate = layDate
+	egg.HatchDate = hatchDate
+	egg.FormattedLayDate = formattedLayDate
+	egg.FormattedHatchDateETA = formattedHatchDate
+	egg.HasHatched = hasHatched
+	eggs = append(eggs, egg)
+
+	log.Println("Loaded egg, incubator " + strconv.Itoa(egg.IncubatorID) + " slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
 	return &egg
 }
