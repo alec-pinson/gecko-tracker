@@ -79,10 +79,33 @@ func LoadFromDB() {
 	log.Printf("Connected to Database %s%s with username '%s'", config.Database.Url, config.Database.Name, config.Database.Username)
 
 	db := client.Use(config.Database.Name)
+
+	var dbBackup couchdb.DatabaseService
+	if config.Database.BackupName != "" {
+		client.Create(config.Database.BackupName)
+		dbBackup = client.Use(config.Database.BackupName)
+		log.Println("Database will be backed up to " + config.Database.BackupName)
+	}
 	result, _ := db.AllDocs(&couchdb.QueryParameters{IncludeDocs: &[]bool{true}[0]})
 	var data CouchDBDocument
 	for _, row := range result.Rows {
 		mapstructure.Decode(row.Doc, &data)
+
+		// creates a copy of the db
+		if config.Database.BackupName != "" {
+			doc := &CouchDBDocument{
+				Type:      data.Type,
+				Gecko:     data.Gecko,
+				Incubator: data.Incubator,
+				Egg:       data.Egg,
+				Sale:      data.Sale,
+			}
+
+			_, err := dbBackup.Post(doc)
+			if err != nil {
+				panic(err)
+			}
+		}
 
 		switch dataType := data.Type; {
 		case dataType == "egg":

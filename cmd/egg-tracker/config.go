@@ -9,10 +9,11 @@ import (
 
 type Config struct {
 	Database struct {
-		Url      string
-		Username string
-		Password string
-		Name     string
+		Url        string
+		Username   string
+		Password   string
+		Name       string
+		BackupName string
 	}
 	Sources   []string
 	HatchTime time.Duration
@@ -25,6 +26,7 @@ func LoadConfiguration() {
 	config.Database.Name = os.Getenv("DATABASE_NAME")
 	config.Database.Username = os.Getenv("DATABASE_USERNAME")
 	config.Database.Password = os.Getenv("DATABASE_PASSWORD")
+	config.Database.BackupName = os.Getenv("DATABASE_BACKUP_NAME")
 
 	if config.Database.Url == "" || config.Database.Name == "" || config.Database.Username == "" || config.Database.Password == "" {
 		log.Println("Please set the following environment variables")
