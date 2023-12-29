@@ -1,6 +1,16 @@
 # egg-tracker
 Used to track my geckos egg laying + hatching
 
+![screenshot-main-page](assets/screenshot-home.png)<br>
+![screenshot-add-gecko](assets/screenshot-add-gecko.png)<br>
+![screenshot-add-egg](assets/screenshot-add-egg.png)<br>
+![screenshot-add-incubator](assets/screenshot-add-incubator.png)<br>
+![screenshot-add-sale](assets/screenshot-add-sale.png)<br>
+
+# port
+
+Runs on port `8080`
+
 # env variables
 
 Supports saving data to couchdb, required variables are:-
@@ -12,7 +22,7 @@ DATABASE_PASSWORD="my-couchdb-password"
 DATABASE_NAME="eggs"
 ```
 
-## Option to override default sale sources:-
+## option to override default sale sources:-
 
 Default = `Facebook,Preloved`
 
@@ -20,7 +30,7 @@ Default = `Facebook,Preloved`
 SALE_SOURCES="Facebook,eBay"
 ```
 
-## Set custom hatch days
+## set custom hatch days
 
 Default = `60d`
 
