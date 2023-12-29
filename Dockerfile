@@ -11,5 +11,6 @@ RUN cd cmd/egg-tracker && \
 FROM alpine:3.19.0
 RUN apk add ca-certificates
 COPY --from=build_base /build/out/my-app /app/egg-tracker
+COPY cmd/egg-tracker/assets /app/assets
 WORKDIR /app
 CMD ["/app/egg-tracker"]
