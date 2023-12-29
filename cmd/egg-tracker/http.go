@@ -71,8 +71,7 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		for _, gecko := range geckos {
 			availableGeckos = append(availableGeckos, gecko.ID)
 		}
-		var availableIncubators map[int]Incubator
-		availableIncubators = make(map[int]Incubator)
+		var availableIncubators map[int]Incubator = make(map[int]Incubator)
 		for _, incubator := range incubators {
 			availableIncubators[incubator.ID] = incubator
 		}

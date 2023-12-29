@@ -55,7 +55,7 @@ func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate
 	return &egg
 }
 
-func LoadEgg(id string, incubatorId int, row int, column, geckoId int, eggCount int, layDate time.Time, hatchDate time.Time, formattedLayDate string, formattedHatchDate string, hasHatched bool) *Egg {
+func LoadEgg(id string, incubatorId int, row int, column, geckoId int, eggCount int, formattedLayDate string, formattedHatchDate string, hasHatched bool) *Egg {
 	var egg Egg
 	egg.ID = id
 	egg.IncubatorID = incubatorId
@@ -63,7 +63,15 @@ func LoadEgg(id string, incubatorId int, row int, column, geckoId int, eggCount 
 	egg.Incubator.Column = column
 	egg.GeckoID = geckoId
 	egg.Count = eggCount
+	layDate, err := time.Parse("02-01-2006", formattedLayDate)
+	if err != nil {
+		log.Println(err)
+	}
 	egg.LayDate = layDate
+	hatchDate, err := time.Parse("02-01-2006", formattedHatchDate)
+	if err != nil {
+		log.Println(err)
+	}
 	egg.HatchDate = hatchDate
 	egg.FormattedLayDate = formattedLayDate
 	egg.FormattedHatchDateETA = formattedHatchDate

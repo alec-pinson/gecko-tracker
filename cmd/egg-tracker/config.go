@@ -26,6 +26,15 @@ func LoadConfiguration() {
 	config.Database.Username = os.Getenv("DATABASE_USERNAME")
 	config.Database.Password = os.Getenv("DATABASE_PASSWORD")
 
+	if config.Database.Url == "" || config.Database.Name == "" || config.Database.Username == "" || config.Database.Password == "" {
+		log.Println("Please set the following environment variables")
+		log.Println("DATABASE_URL")
+		log.Println("DATABASE_NAME")
+		log.Println("DATABASE_USERNAME")
+		log.Println("DATABASE_PASSWORD")
+		os.Exit(1)
+	}
+
 	if os.Getenv("SALE_SOURCES") != "" {
 		config.Sources = strings.Split(os.Getenv("SALE_SOURCES"), ",")
 	} else {
