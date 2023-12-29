@@ -99,6 +99,9 @@ func (egg *Egg) GetLayDateString() string {
 func (egg *Egg) Hatched() {
 	egg.HasHatched = true
 	egg.HatchDate = time.Now()
+	egg.IncubatorID = 0
+	egg.Incubator.Row = 0
+	egg.Incubator.Column = 0
 	log.Print("Marked egg as hatched")
 }
 

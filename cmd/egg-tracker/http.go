@@ -26,7 +26,7 @@ type TemplateData struct {
 func homepage(w http.ResponseWriter, r *http.Request) {
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
-		if egg.Incubator.Column != 0 {
+		if !egg.HasHatched {
 			incubatingEggs = append(incubatingEggs, egg)
 		}
 	}
