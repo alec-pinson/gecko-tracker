@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/url"
+	"reflect"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/zemirco/couchdb"
@@ -120,4 +121,43 @@ func LoadFromDB() {
 			log.Println("Unknown data type: " + dataType)
 		}
 	}
+}
+
+func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale) {
+	u, err := url.Parse(config.Database.Url)
+	if err != nil {
+		panic(err)
+	}
+
+	// connect
+	client, err := couchdb.NewAuthClient(config.Database.Username, config.Database.Password, u)
+	if err != nil {
+		panic(err)
+	}
+
+	db := client.Use(config.Database.Name)
+	result, _ := db.AllDocs(&couchdb.QueryParameters{IncludeDocs: &[]bool{true}[0]})
+	var data CouchDBDocument
+	for _, row := range result.Rows {
+		mapstructure.Decode(row.Doc, &data)
+
+		switch dataType := data.Type; {
+		case dataType == "egg":
+			if reflect.DeepEqual(data, egg) {
+				if _, err = db.Delete(&data.Document); err != nil {
+					panic(err)
+				}
+			}
+			WriteToDB(dataType, gecko, incubator, egg, sale)
+		case dataType == "gecko":
+
+		case dataType == "incubator":
+
+		case dataType == "sale":
+
+		default:
+			log.Println("Unknown data type: " + dataType)
+		}
+	}
+
 }

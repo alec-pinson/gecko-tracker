@@ -146,3 +146,21 @@ func newIncubator(w http.ResponseWriter, r *http.Request) {
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
+func hasHatched(w http.ResponseWriter, r *http.Request) {
+	tpl := template.Must(template.ParseFiles("assets/has_hatched.html"))
+	if r.Method != http.MethodPost {
+		err := tpl.Execute(w, map[string]interface{}{})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	eggId := r.FormValue("eggId")
+	egg := GetEgg(eggId)
+	egg.Hatched()
+
+	// tpl.Execute(w, struct{ Success bool }{true})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}

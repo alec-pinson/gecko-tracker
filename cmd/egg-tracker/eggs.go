@@ -30,6 +30,15 @@ func generateUniqueID() string {
 	return uniqueID
 }
 
+func GetEgg(id string) Egg {
+	for _, egg := range eggs {
+		if egg.ID == id {
+			return egg
+		}
+	}
+	return Egg{}
+}
+
 func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate string) *Egg {
 	var egg Egg
 	egg.ID = generateUniqueID()
@@ -90,6 +99,7 @@ func (egg *Egg) GetLayDateString() string {
 func (egg *Egg) Hatched() {
 	egg.HasHatched = true
 	egg.HatchDate = time.Now()
+	log.Print("Marked egg as hatched")
 }
 
 func (egg *Egg) GetHatchETA() time.Time {

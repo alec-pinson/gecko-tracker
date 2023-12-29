@@ -132,6 +132,20 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
+button[type="button"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+
 select {
   width: 80%; /* Match the width of other input elements */
   padding: 10px; /* Padding for comfort */
