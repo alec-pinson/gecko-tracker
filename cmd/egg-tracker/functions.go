@@ -24,7 +24,7 @@ func GetNextLayDateInfo() string {
 func GetNextHatchDateInfo() string {
 	var HatchETA time.Time = time.Now().Add(time.Hour * 99999)
 	for _, egg := range eggs {
-		if egg.GetHatchETA().Before(HatchETA) {
+		if egg.GetHatchETA().Before(HatchETA) && !egg.HasHatched {
 			HatchETA = egg.GetHatchETA()
 		}
 
