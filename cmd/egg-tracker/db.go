@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/url"
-	"reflect"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/zemirco/couchdb"
@@ -140,15 +139,15 @@ func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale S
 	var data CouchDBDocument
 	for _, row := range result.Rows {
 		mapstructure.Decode(row.Doc, &data)
-
 		switch dataType := data.Type; {
 		case dataType == "egg":
-			if reflect.DeepEqual(data, egg) {
+			if data.Egg.ID == egg.ID {
+				db.Get(&data.Document, row.ID)
 				if _, err = db.Delete(&data.Document); err != nil {
 					panic(err)
 				}
+				WriteToDB(dataType, gecko, incubator, egg, sale)
 			}
-			WriteToDB(dataType, gecko, incubator, egg, sale)
 		case dataType == "gecko":
 
 		case dataType == "incubator":

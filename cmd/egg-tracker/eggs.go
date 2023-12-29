@@ -103,6 +103,7 @@ func (egg *Egg) Hatched() {
 	egg.Incubator.Row = 0
 	egg.Incubator.Column = 0
 	log.Print("Marked egg as hatched - " + egg.ID)
+	UpdateDB("egg", Gecko{}, Incubator{}, *egg, Sale{})
 }
 
 func (egg *Egg) GetHatchETA() time.Time {
