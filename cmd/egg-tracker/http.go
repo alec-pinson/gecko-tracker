@@ -76,6 +76,9 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 			availableIncubators[incubator.ID] = incubator
 		}
 		incubatorId, _ := strconv.Atoi(r.FormValue("incubator"))
+		if incubatorId == 0 {
+			incubatorId = 1
+		}
 		err := tpl.Execute(w, map[string]interface{}{
 			"AvailableGeckos":     availableGeckos,
 			"AvailableIncubators": availableIncubators,
