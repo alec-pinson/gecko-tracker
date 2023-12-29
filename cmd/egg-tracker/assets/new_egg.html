@@ -20,7 +20,7 @@
         </select>
 
         <label for="incubator">Incubator</label>
-        <select id="incubator" name="incubator" onchange="refresh()">
+        <select id="incubator" name="incubator" onchange="refresh()" required>
           {{range .AvailableIncubators}}
           <option value="{{.ID}}" {{ if eq $.SelectedIncubator .ID }}selected="selected"{{ end }}>Incubator {{.ID}}</option>
           {{end}}

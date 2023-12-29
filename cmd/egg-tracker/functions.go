@@ -9,7 +9,7 @@ import (
 )
 
 func GetNextLayDateInfo() string {
-	var LayETA time.Time = time.Now().Add(time.Hour * 99999)
+	var LayETA time.Time = time.Now().Add(time.Hour * 999999)
 	var geckoId int = 0
 	for _, gecko := range geckos {
 		if gecko.GetLayETA().Before(LayETA) {
@@ -18,16 +18,32 @@ func GetNextLayDateInfo() string {
 		}
 	}
 
+	if len(eggs) == 0 {
+		return "No gecko eggs have been recorded"
+	}
+
 	return LayETA.Format("02-01-2006") + " (gecko " + strconv.Itoa(geckoId) + ")"
 }
 
 func GetNextHatchDateInfo() string {
-	var HatchETA time.Time = time.Now().Add(time.Hour * 99999)
+	var HatchETA time.Time = time.Now().Add(time.Hour * 999999)
+	var unhatchedEggsFound = false
 	for _, egg := range eggs {
 		if egg.GetHatchETA().Before(HatchETA) && !egg.HasHatched {
 			HatchETA = egg.GetHatchETA()
 		}
+		if !egg.HasHatched {
+			unhatchedEggsFound = true
+		}
+	}
 
+	if len(eggs) == 0 {
+		return "No gecko eggs have been recorded"
+	}
+
+	// check if any eggs waiting to hatch
+	if !unhatchedEggsFound {
+		return "No eggs waiting to hatch"
 	}
 
 	return HatchETA.Format("02-01-2006")
