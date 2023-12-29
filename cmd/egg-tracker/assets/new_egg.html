@@ -1,11 +1,11 @@
-<!-- new_egg.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Egg</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
     <!-- Link to the CSS file -->
   </head>
   <body>
@@ -13,14 +13,14 @@
       <h1>Add Egg</h1>
       <form method="POST">
         <label for="gecko">Gecko</label>
-        <select id="gecko" name="gecko" required>
+        <select id="gecko" name="gecko" onchange="refresh()" required>
           {{range .AvailableGeckos}}
-          <option value="{{.}}">Gecko {{.}}</option>
+          <option value="{{.}}" {{ if eq $.SelectedGecko . }}selected="selected"{{ end }}>Gecko {{.}}</option>
           {{end}}
         </select>
 
         <label for="incubator">Incubator</label>
-        <select id="incubator" name="incubator" onchange="refreshEggLayout()">
+        <select id="incubator" name="incubator" onchange="refresh()" required>
           {{range .AvailableIncubators}}
           <option value="{{.ID}}" {{ if eq $.SelectedIncubator .ID }}selected="selected"{{ end }}>Incubator {{.ID}}</option>
           {{end}}
@@ -41,9 +41,10 @@
         />
   
         <script>
-        function refreshEggLayout() {
-          var val = document.getElementById("incubator").value;
-          document.location.href='?incubator='+val
+        function refresh() {
+          var geckoVal = document.getElementById("gecko").value;
+          var incubatorVal = document.getElementById("incubator").value;
+          document.location.href='?gecko='+geckoVal+'&incubator='+incubatorVal
         }
         </script>
 
@@ -54,7 +55,7 @@
             <tr>
               {{ range $_, $column := N 1 $incubator.Columns }}
               <td class="egg-slot" data-details="">
-                <span class="label"><a href="?incubator={{$incubator.ID}}&row={{$row}}&column={{$column}}">Egg Slot</a></span>
+                <span class="label"><a href="?gecko={{$.SelectedGecko}}&incubator={{$incubator.ID}}&row={{$row}}&column={{$column}}">Egg Slot</a></span>
               </td>
               {{ end }}
             </tr>

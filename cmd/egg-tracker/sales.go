@@ -7,13 +7,13 @@ import (
 )
 
 type Sale struct {
-	Buyer      string
-	Source     string
-	Male       int
-	Female     int
-	Baby       int
-	TotalPrice int
-	Date       time.Time
+	Buyer      string    `json:"buyer"`
+	Source     string    `json:"source"`
+	Male       int       `json:"male"`
+	Female     int       `json:"female"`
+	Baby       int       `json:"baby"`
+	TotalPrice int       `json:"totalPrice"`
+	Date       time.Time `json:"date"`
 }
 
 func AddSale(buyer string, source string, male int, female int, baby int, totalPrice int, date string) *Sale {
@@ -30,7 +30,7 @@ func AddSale(buyer string, source string, male int, female int, baby int, totalP
 	}
 	sale.Date = SaleDate
 
-	sales = append(sales, sale)
+	sales = append(sales, &sale)
 
 	log.Println("Added new sale £" + strconv.Itoa(sale.TotalPrice))
 
@@ -49,7 +49,7 @@ func LoadSale(buyer string, source string, male int, female int, baby int, total
 	sale.TotalPrice = totalPrice
 	sale.Date = date
 
-	sales = append(sales, sale)
+	sales = append(sales, &sale)
 
 	log.Println("Loaded sale £" + strconv.Itoa(sale.TotalPrice))
 

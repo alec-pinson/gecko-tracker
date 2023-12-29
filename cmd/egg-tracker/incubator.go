@@ -6,9 +6,9 @@ import (
 )
 
 type Incubator struct {
-	ID      int
-	Rows    int
-	Columns int
+	ID      int `json:"id"`
+	Rows    int `json:"rows"`
+	Columns int `json:"columns"`
 }
 
 func AddIncubator(rows int, columns int) *Incubator {
@@ -16,7 +16,7 @@ func AddIncubator(rows int, columns int) *Incubator {
 	incubator.ID = len(incubators) + 1
 	incubator.Rows = rows
 	incubator.Columns = columns
-	incubators = append(incubators, incubator)
+	incubators = append(incubators, &incubator)
 
 	log.Println("Added new incubator, " + strconv.Itoa(incubator.ID) + ", size " + strconv.Itoa(incubator.Columns) + " x " + strconv.Itoa(incubator.Rows))
 
@@ -30,7 +30,7 @@ func LoadIncubator(id int, rows int, columns int) *Incubator {
 	incubator.ID = id
 	incubator.Rows = rows
 	incubator.Columns = columns
-	incubators = append(incubators, incubator)
+	incubators = append(incubators, &incubator)
 
 	log.Println("Loaded incubator, " + strconv.Itoa(incubator.ID) + ", size " + strconv.Itoa(incubator.Columns) + " x " + strconv.Itoa(incubator.Rows))
 

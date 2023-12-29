@@ -31,7 +31,7 @@ func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale 
 	}
 
 	// use database and create a document
-	db := client.Use("eggs")
+	db := client.Use(config.Database.Name)
 	doc := &CouchDBDocument{
 		Type:      dataType,
 		Gecko:     gecko,
@@ -74,17 +74,42 @@ func LoadFromDB() {
 	}
 
 	// create the database if it doesnt exist
-	client.Create("eggs")
+	client.Create(config.Database.Name)
 
-	db := client.Use("eggs")
+	log.Printf("Connected to Database %s%s with username '%s'", config.Database.Url, config.Database.Name, config.Database.Username)
+
+	db := client.Use(config.Database.Name)
+
+	var dbBackup couchdb.DatabaseService
+	if config.Database.BackupName != "" {
+		client.Create(config.Database.BackupName)
+		dbBackup = client.Use(config.Database.BackupName)
+		log.Println("Database will be backed up to " + config.Database.BackupName)
+	}
 	result, _ := db.AllDocs(&couchdb.QueryParameters{IncludeDocs: &[]bool{true}[0]})
 	var data CouchDBDocument
 	for _, row := range result.Rows {
 		mapstructure.Decode(row.Doc, &data)
 
+		// creates a copy of the db
+		if config.Database.BackupName != "" {
+			doc := &CouchDBDocument{
+				Type:      data.Type,
+				Gecko:     data.Gecko,
+				Incubator: data.Incubator,
+				Egg:       data.Egg,
+				Sale:      data.Sale,
+			}
+
+			_, err := dbBackup.Post(doc)
+			if err != nil {
+				panic(err)
+			}
+		}
+
 		switch dataType := data.Type; {
 		case dataType == "egg":
-			LoadEgg(data.Egg.ID, data.Egg.IncubatorID, data.Egg.Incubator.Row, data.Egg.Incubator.Column, data.Egg.GeckoID, data.Egg.Count, data.Egg.LayDate, data.Egg.HatchDate, data.Egg.FormattedLayDate, data.Egg.FormattedHatchDateETA, data.Egg.HasHatched)
+			LoadEgg(data.Egg.ID, data.Egg.IncubatorID, data.Egg.Incubator.Row, data.Egg.Incubator.Column, data.Egg.GeckoID, data.Egg.Count, data.Egg.FormattedLayDate, data.Egg.FormattedHatchDateETA, data.Egg.HasHatched)
 		case dataType == "gecko":
 			LoadGecko(data.Gecko.ID, data.Gecko.Description)
 		case dataType == "incubator":
@@ -95,4 +120,43 @@ func LoadFromDB() {
 			log.Println("Unknown data type: " + dataType)
 		}
 	}
+}
+
+func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale) {
+	u, err := url.Parse(config.Database.Url)
+	if err != nil {
+		panic(err)
+	}
+
+	// connect
+	client, err := couchdb.NewAuthClient(config.Database.Username, config.Database.Password, u)
+	if err != nil {
+		panic(err)
+	}
+
+	db := client.Use(config.Database.Name)
+	result, _ := db.AllDocs(&couchdb.QueryParameters{IncludeDocs: &[]bool{true}[0]})
+	var data CouchDBDocument
+	for _, row := range result.Rows {
+		mapstructure.Decode(row.Doc, &data)
+		switch dataType := data.Type; {
+		case dataType == "egg":
+			if data.Egg.ID == egg.ID {
+				db.Get(&data.Document, row.ID)
+				if _, err = db.Delete(&data.Document); err != nil {
+					panic(err)
+				}
+				WriteToDB(dataType, gecko, incubator, egg, sale)
+			}
+		case dataType == "gecko":
+
+		case dataType == "incubator":
+
+		case dataType == "sale":
+
+		default:
+			log.Println("Unknown data type: " + dataType)
+		}
+	}
+
 }

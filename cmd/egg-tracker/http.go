@@ -20,14 +20,14 @@ type TemplateData struct {
 	NextLayDate   string
 	NextHatchDate string
 	TotalSales    string
-	Incubators    []Incubator
+	Incubators    []*Incubator
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
-		if egg.Incubator.Column != 0 {
-			incubatingEggs = append(incubatingEggs, egg)
+		if !egg.HasHatched {
+			incubatingEggs = append(incubatingEggs, *egg)
 		}
 	}
 	data := TemplateData{
@@ -71,16 +71,23 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		for _, gecko := range geckos {
 			availableGeckos = append(availableGeckos, gecko.ID)
 		}
-		var availableIncubators map[int]Incubator
-		availableIncubators = make(map[int]Incubator)
+		var availableIncubators map[int]Incubator = make(map[int]Incubator)
 		for _, incubator := range incubators {
-			availableIncubators[incubator.ID] = incubator
+			availableIncubators[incubator.ID] = *incubator
+		}
+		geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
+		if geckoId == 0 {
+			geckoId = 1
 		}
 		incubatorId, _ := strconv.Atoi(r.FormValue("incubator"))
+		if incubatorId == 0 {
+			incubatorId = 1
+		}
 		err := tpl.Execute(w, map[string]interface{}{
 			"AvailableGeckos":     availableGeckos,
 			"AvailableIncubators": availableIncubators,
 			"TodaysDate":          time.Now().Format("2006-01-02"),
+			"SelectedGecko":       geckoId,
 			"SelectedIncubator":   incubatorId,
 			"Row":                 r.FormValue("row"),
 			"Column":              r.FormValue("column"),
@@ -97,7 +104,12 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 	geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 	eggCount, _ := strconv.Atoi(r.FormValue("eggCount"))
 	date, _ := time.Parse("2006-01-02", r.FormValue("date"))
-	AddEgg(incubatorId, row, column, geckoId, eggCount, date.Format("02/01/2006"), "")
+
+	if incubatorId == 0 || row == 0 || column == 0 {
+		http.Redirect(w, r, "/newEgg", http.StatusSeeOther)
+		return
+	}
+	AddEgg(incubatorId, row, column, geckoId, eggCount, date.Format("02/01/2006"))
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -107,7 +119,7 @@ func newSale(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.ParseFiles("assets/new_sale.html"))
 	if r.Method != http.MethodPost {
 		err := tpl.Execute(w, map[string]interface{}{
-			"AvailableSources": availableSources,
+			"AvailableSources": config.Sources,
 			"TodaysDate":       time.Now().Format("2006-01-02"),
 		})
 		if err != nil {
@@ -140,6 +152,24 @@ func newIncubator(w http.ResponseWriter, r *http.Request) {
 	rows, _ := strconv.Atoi(r.FormValue("rows"))
 	columns, _ := strconv.Atoi(r.FormValue("columns"))
 	AddIncubator(rows, columns)
+
+	// tpl.Execute(w, struct{ Success bool }{true})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func hasHatched(w http.ResponseWriter, r *http.Request) {
+	tpl := template.Must(template.ParseFiles("assets/has_hatched.html"))
+	if r.Method != http.MethodPost {
+		err := tpl.Execute(w, map[string]interface{}{})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	eggId := r.FormValue("eggId")
+	egg := GetEgg(eggId)
+	egg.Hatched()
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
