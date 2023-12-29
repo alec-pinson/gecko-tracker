@@ -20,14 +20,14 @@ type TemplateData struct {
 	NextLayDate   string
 	NextHatchDate string
 	TotalSales    string
-	Incubators    []Incubator
+	Incubators    []*Incubator
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
 		if !egg.HasHatched {
-			incubatingEggs = append(incubatingEggs, egg)
+			incubatingEggs = append(incubatingEggs, *egg)
 		}
 	}
 	data := TemplateData{
@@ -73,7 +73,11 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		}
 		var availableIncubators map[int]Incubator = make(map[int]Incubator)
 		for _, incubator := range incubators {
-			availableIncubators[incubator.ID] = incubator
+			availableIncubators[incubator.ID] = *incubator
+		}
+		geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
+		if geckoId == 0 {
+			geckoId = 1
 		}
 		incubatorId, _ := strconv.Atoi(r.FormValue("incubator"))
 		if incubatorId == 0 {
@@ -83,6 +87,7 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 			"AvailableGeckos":     availableGeckos,
 			"AvailableIncubators": availableIncubators,
 			"TodaysDate":          time.Now().Format("2006-01-02"),
+			"SelectedGecko":       geckoId,
 			"SelectedIncubator":   incubatorId,
 			"Row":                 r.FormValue("row"),
 			"Column":              r.FormValue("column"),

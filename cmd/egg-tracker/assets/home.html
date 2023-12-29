@@ -42,9 +42,9 @@ Lay Date: {{ $egg.FormattedLayDate }}
 Hatch ETA: {{ $egg.FormattedHatchDateETA }}
               ">
               {{ if eq $egg.Count 1 }}
-                <span class="label"><a href="hasHatched?egg={{$egg.ID}}">1 Egg</a></span>
+                <span class="label"><a href="hasHatched?eggId={{$egg.ID}}">1 Egg</a></span>
               {{ else }}
-                <span class="label"><a href="hasHatched?egg={{$egg.ID}}">{{ $egg.Count }} Eggs</a></span>
+                <span class="label"><a href="hasHatched?eggId={{$egg.ID}}">{{ $egg.Count }} Eggs</a></span>
               {{ end }}
               </td>
             {{ else }}

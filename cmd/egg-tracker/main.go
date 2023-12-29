@@ -4,10 +4,10 @@ import (
 	"net/http"
 )
 
-var geckos []Gecko
-var incubators []Incubator
-var eggs []Egg
-var sales []Sale
+var geckos []*Gecko
+var incubators []*Incubator
+var eggs []*Egg
+var sales []*Sale
 
 func main() {
 	LoadConfiguration()

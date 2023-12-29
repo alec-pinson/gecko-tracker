@@ -26,7 +26,7 @@ func AddGecko(id int, description string) (*Gecko, error) {
 	var gecko Gecko
 	gecko.ID = id
 	gecko.Description = description
-	geckos = append(geckos, gecko)
+	geckos = append(geckos, &gecko)
 
 	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
 
@@ -39,7 +39,7 @@ func LoadGecko(id int, description string) (*Gecko, error) {
 	var gecko Gecko
 	gecko.ID = id
 	gecko.Description = description
-	geckos = append(geckos, gecko)
+	geckos = append(geckos, &gecko)
 
 	log.Println("Loaded gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
 
@@ -49,7 +49,7 @@ func LoadGecko(id int, description string) (*Gecko, error) {
 func GetGecko(id int) (Gecko, error) {
 	for _, gecko := range geckos {
 		if gecko.ID == id {
-			return gecko, nil
+			return *gecko, nil
 		}
 	}
 	log.Println("Gecko not found: " + strconv.Itoa(id))
@@ -76,7 +76,7 @@ func (gecko Gecko) GetLayHistory() []Egg {
 	var eggsLaid []Egg
 	for _, egg := range eggs {
 		if egg.GeckoID == gecko.ID {
-			eggsLaid = append(eggsLaid, egg)
+			eggsLaid = append(eggsLaid, *egg)
 		}
 	}
 

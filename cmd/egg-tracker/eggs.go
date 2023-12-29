@@ -30,13 +30,13 @@ func generateUniqueID() string {
 	return uniqueID
 }
 
-func GetEgg(id string) Egg {
+func GetEgg(id string) *Egg {
 	for _, egg := range eggs {
 		if egg.ID == id {
 			return egg
 		}
 	}
-	return Egg{}
+	return &Egg{}
 }
 
 func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate string) *Egg {
@@ -55,7 +55,7 @@ func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate
 	egg.HatchDate = egg.GetHatchETA()
 	egg.FormattedLayDate = egg.LayDate.Format("02-01-2006")
 	egg.FormattedHatchDateETA = egg.GetHatchETAString()
-	eggs = append(eggs, egg)
+	eggs = append(eggs, &egg)
 
 	log.Println("Added new egg to incubator " + strconv.Itoa(egg.IncubatorID) + " slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
@@ -85,7 +85,7 @@ func LoadEgg(id string, incubatorId int, row int, column, geckoId int, eggCount 
 	egg.FormattedLayDate = formattedLayDate
 	egg.FormattedHatchDateETA = formattedHatchDate
 	egg.HasHatched = hasHatched
-	eggs = append(eggs, egg)
+	eggs = append(eggs, &egg)
 
 	log.Println("Loaded egg, incubator " + strconv.Itoa(egg.IncubatorID) + " slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
@@ -102,7 +102,7 @@ func (egg *Egg) Hatched() {
 	egg.IncubatorID = 0
 	egg.Incubator.Row = 0
 	egg.Incubator.Column = 0
-	log.Print("Marked egg as hatched")
+	log.Print("Marked egg as hatched - " + egg.ID)
 }
 
 func (egg *Egg) GetHatchETA() time.Time {

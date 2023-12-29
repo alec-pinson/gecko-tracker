@@ -30,7 +30,7 @@ func AddSale(buyer string, source string, male int, female int, baby int, totalP
 	}
 	sale.Date = SaleDate
 
-	sales = append(sales, sale)
+	sales = append(sales, &sale)
 
 	log.Println("Added new sale £" + strconv.Itoa(sale.TotalPrice))
 
@@ -49,7 +49,7 @@ func LoadSale(buyer string, source string, male int, female int, baby int, total
 	sale.TotalPrice = totalPrice
 	sale.Date = date
 
-	sales = append(sales, sale)
+	sales = append(sales, &sale)
 
 	log.Println("Loaded sale £" + strconv.Itoa(sale.TotalPrice))
 
