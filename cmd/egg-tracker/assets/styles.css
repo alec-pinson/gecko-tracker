@@ -1,7 +1,3 @@
-* {
-  color: black;
-}
-
 body {
   display: block;
   position: absolute;
@@ -51,6 +47,12 @@ td.egg-slot {
   cursor: pointer;
   text-align: left;
   color: black;
+}
+
+td.egg-slot a {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 td.egg-slot::before {

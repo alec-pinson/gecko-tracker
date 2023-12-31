@@ -21,6 +21,7 @@ type Egg struct {
 	HasHatched            bool      `json:"hasHatched"`
 	HatchDate             time.Time `json:"hatchDate"`
 	FormattedHatchDateETA string    `json:"formattedHatchDateETA"`
+	Colour                string    // used for rag status
 }
 
 func generateUniqueID() string {

@@ -8,8 +8,15 @@ import (
 	"time"
 )
 
-func GetNextLayDateInfo() string {
+type NextLayDate struct {
+	Value  string
+	Colour string
+}
+
+func GetNextLayDateInfo() NextLayDate {
 	var LayETA time.Time = time.Now().Add(time.Hour * 999999)
+	var nextLayDate NextLayDate
+	nextLayDate.Colour = "000000" // black
 	var geckoId int = 0
 	for _, gecko := range geckos {
 		if gecko.GetLayETA().Before(LayETA) {
@@ -19,14 +26,37 @@ func GetNextLayDateInfo() string {
 	}
 
 	if len(eggs) == 0 {
-		return "No gecko eggs have been recorded"
+		nextLayDate.Value = "No gecko eggs have been recorded"
+		return nextLayDate
 	}
 
-	return LayETA.Format("02-01-2006") + " (gecko " + strconv.Itoa(geckoId) + ")"
+	if time.Now().After(LayETA) {
+		// if lay date is after current date
+		// make it red
+		nextLayDate.Colour = "#FF0000"
+	} else if time.Now().Add(time.Hour * (2 * 24)).After(LayETA) {
+		// if lay date is in the next 2 days
+		// make it amber
+		nextLayDate.Colour = "#FF9B00"
+	} else {
+		// normal colour
+		nextLayDate.Colour = "000000" // black
+	}
+
+	nextLayDate.Value = LayETA.Format("02-01-2006") + " (gecko " + strconv.Itoa(geckoId) + ")"
+
+	return nextLayDate
 }
 
-func GetNextHatchDateInfo() string {
+type NextHatchDate struct {
+	Value  string
+	Colour string
+}
+
+func GetNextHatchDateInfo() NextHatchDate {
 	var HatchETA time.Time = time.Now().Add(time.Hour * 999999)
+	var nextHatchDate NextHatchDate
+	nextHatchDate.Colour = "000000" // black
 	var unhatchedEggsFound = false
 	for _, egg := range eggs {
 		if egg.GetHatchETA().Before(HatchETA) && !egg.HasHatched {
@@ -38,15 +68,32 @@ func GetNextHatchDateInfo() string {
 	}
 
 	if len(eggs) == 0 {
-		return "No gecko eggs have been recorded"
+		nextHatchDate.Value = "No gecko eggs have been recorded"
+		return nextHatchDate
 	}
 
 	// check if any eggs waiting to hatch
 	if !unhatchedEggsFound {
-		return "No eggs waiting to hatch"
+		nextHatchDate.Value = "No eggs waiting to hatch"
+		return nextHatchDate
 	}
 
-	return HatchETA.Format("02-01-2006")
+	if time.Now().After(HatchETA) {
+		// if hatch date is after current date
+		// make it red
+		nextHatchDate.Colour = "#FF0000"
+	} else if time.Now().Add(time.Hour * (2 * 24)).After(HatchETA) {
+		// if hatch date is in the next 2 days
+		// make it amber
+		nextHatchDate.Colour = "#FF9B00"
+	} else {
+		// normal colour
+		nextHatchDate.Colour = "000000" // black
+	}
+
+	nextHatchDate.Value = HatchETA.Format("02-01-2006")
+
+	return nextHatchDate
 }
 
 func N(start, end int) (stream chan int) {
@@ -83,4 +130,19 @@ func DaysToHours(days string) string {
 	iHours := iDays * 24
 
 	return strconv.Itoa(iHours) + "h"
+}
+
+func GetEggRAG(egg Egg) string {
+	if time.Now().After(egg.GetHatchETA()) {
+		// if hatch date is after current date
+		// make it red
+		return "#FF0000"
+	} else if time.Now().Add(time.Hour * (2 * 24)).After(egg.GetHatchETA()) {
+		// if hatch date is in the next 2 days
+		// make it amber
+		return "#FF9B00"
+	} else {
+		// normal colour
+		return "#008721" // green
+	}
 }

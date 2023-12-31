@@ -17,9 +17,9 @@
         <a href="newEgg" class="link">New Egg</a>
         <a href="newSale" class="link">New Sale</a>
         <p></p>
-        <b>Next Lay Date:</b> {{ .NextLayDate }}<br />
+        <b>Next Lay Date:</b> <font color="{{ .NextLayDate.Colour }}">{{ .NextLayDate.Value }}</font><br />
         <br />
-        <b>Next Hatch Date:</b> {{ .NextHatchDate }}<br />
+        <b>Next Hatch Date:</b> <font color="{{ .NextHatchDate.Colour }}">{{ .NextHatchDate.Value }}</font><br />
         <br />
         <b>Total Sales:</b> {{ .TotalSales }}<br />
         <br />
@@ -42,14 +42,14 @@ Lay Date: {{ $egg.FormattedLayDate }}
 Hatch ETA: {{ $egg.FormattedHatchDateETA }}
               ">
               {{ if eq $egg.Count 1 }}
-                <span class="label"><a href="hasHatched?eggId={{$egg.ID}}">1 Egg</a></span>
+                <span class="label"><a href="hasHatched?eggId={{$egg.ID}}"><font color="{{ $egg.Colour }}">1 Egg</font></a></span>
               {{ else }}
-                <span class="label"><a href="hasHatched?eggId={{$egg.ID}}">{{ $egg.Count }} Eggs</a></span>
+                <span class="label"><a href="hasHatched?eggId={{$egg.ID}}"><font color="{{ $egg.Colour }}">{{ $egg.Count }} Eggs</font></a></span>
               {{ end }}
               </td>
             {{ else }}
               <td class="egg-slot" data-details="">
-                <span class="label">No Egg</span>
+                <span class="label"><font color="white">No Egg</font></span>
               </td>
             {{ end }}
           {{ end }}

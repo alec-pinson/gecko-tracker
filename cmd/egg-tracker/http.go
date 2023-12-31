@@ -17,8 +17,8 @@ var funcMap = template.FuncMap{
 
 type TemplateData struct {
 	Eggs          []Egg
-	NextLayDate   string
-	NextHatchDate string
+	NextLayDate   NextLayDate
+	NextHatchDate NextHatchDate
 	TotalSales    string
 	Incubators    []*Incubator
 }
@@ -27,9 +27,11 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
 		if !egg.HasHatched {
+			egg.Colour = GetEggRAG(*egg)
 			incubatingEggs = append(incubatingEggs, *egg)
 		}
 	}
+
 	data := TemplateData{
 		Eggs:          incubatingEggs,
 		NextLayDate:   GetNextLayDateInfo(),
