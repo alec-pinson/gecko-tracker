@@ -32,6 +32,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		geckoId, _ := strconv.Atoi(r.FormValue("geckoId"))
 		gecko, _ := GetGecko(geckoId)
 		gecko.Delete()
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 
 	var incubatingEggs []Egg
