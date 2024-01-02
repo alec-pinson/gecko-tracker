@@ -49,6 +49,15 @@ td {
   color: black;
 }
 
+th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  color: black;
+}
+
 td a {
   color: black;
   background-color: transparent;
