@@ -101,6 +101,7 @@ func LoadFromDB() {
 				Incubator: data.Incubator,
 				Egg:       data.Egg,
 				Sale:      data.Sale,
+				Tank:      data.Tank,
 			}
 
 			_, err := dbBackup.Post(doc)
