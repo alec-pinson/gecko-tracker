@@ -60,7 +60,7 @@ func AddEgg(incubatorId int, row int, column, geckoId int, eggCount int, layDate
 
 	log.Println("Added new egg to incubator " + strconv.Itoa(egg.IncubatorID) + " slot " + strconv.Itoa(egg.Incubator.Row) + "," + strconv.Itoa(egg.Incubator.Column))
 
-	WriteToDB("egg", Gecko{}, Incubator{}, egg, Sale{})
+	WriteToDB("egg", Gecko{}, Incubator{}, egg, Sale{}, Tank{})
 
 	return &egg
 }
@@ -104,7 +104,7 @@ func (egg *Egg) Hatched() {
 	egg.Incubator.Row = 0
 	egg.Incubator.Column = 0
 	log.Print("Marked egg as hatched - " + egg.ID)
-	UpdateDB("egg", Gecko{}, Incubator{}, *egg, Sale{})
+	UpdateDB("egg", Gecko{}, Incubator{}, *egg, Sale{}, Tank{})
 }
 
 func (egg *Egg) GetHatchETA() time.Time {

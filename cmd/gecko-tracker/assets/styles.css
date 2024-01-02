@@ -40,7 +40,7 @@ table {
   margin-top: 10px; /* Add top margin to separate from labels */
 }
 
-td.egg-slot {
+td {
   padding: 10px;
   border: 1px solid #ddd;
   position: relative;
@@ -49,7 +49,16 @@ td.egg-slot {
   color: black;
 }
 
-td.egg-slot a {
+th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  color: black;
+}
+
+td a {
   color: black;
   background-color: transparent;
   text-decoration: none;

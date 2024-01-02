@@ -13,6 +13,7 @@ var funcMap = template.FuncMap{
 	"sortEggsIntoGrid": sortEggsIntoGrid,
 	"toSlotID":         toSlotID,
 	"N":                N,
+	"Title":            Title,
 }
 
 type TemplateData struct {
@@ -21,15 +22,29 @@ type TemplateData struct {
 	NextHatchDate NextHatchDate
 	TotalSales    string
 	Incubators    []*Incubator
+	Geckos        []*Gecko
+	Tanks         []TankContents
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Path == "/deleteGecko" {
+		geckoId, _ := strconv.Atoi(r.FormValue("geckoId"))
+		gecko, _ := GetGecko(geckoId)
+		gecko.Delete()
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
 		if !egg.HasHatched {
 			egg.Colour = GetEggRAG(*egg)
 			incubatingEggs = append(incubatingEggs, *egg)
 		}
+	}
+	var tankContents []TankContents
+	for _, tank := range tanks {
+		tankContents = append(tankContents, tank.GetTankContents())
 	}
 
 	data := TemplateData{
@@ -38,6 +53,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		NextHatchDate: GetNextHatchDateInfo(),
 		TotalSales:    TotalSales(),
 		Incubators:    incubators,
+		Tanks:         tankContents,
 	}
 
 	tpl := template.Must(template.New("home.html").Funcs(funcMap).ParseFiles("assets/home.html"))
@@ -50,15 +66,19 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 func newGecko(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.ParseFiles("assets/new_gecko.html"))
 	if r.Method != http.MethodPost {
-		err := tpl.Execute(w, nil)
+		err := tpl.Execute(w, map[string]interface{}{
+			"TodaysDate": time.Now().Format("2006-01-02"),
+			"Tanks":      tanks,
+		})
 		if err != nil {
 			log.Println(err)
 		}
 		return
 	}
 
-	geckoId, _ := strconv.Atoi(r.FormValue("geckoId"))
-	_, err := AddGecko(geckoId, r.FormValue("description"))
+	tankId, _ := strconv.Atoi(r.FormValue("tankId"))
+	dateOfBirth, _ := time.Parse("2006-01-02", r.FormValue("dob"))
+	_, err := AddGecko(r.FormValue("description"), tankId, r.FormValue("gender"), dateOfBirth.Format("02/01/2006"))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -66,16 +86,47 @@ func newGecko(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func editGecko(w http.ResponseWriter, r *http.Request) {
+	tpl := template.Must(template.New("new_gecko.html").Funcs(funcMap).ParseFiles("assets/new_gecko.html"))
+
+	geckoId, _ := strconv.Atoi(r.FormValue("geckoId"))
+	gecko, _ := GetGecko(geckoId)
+
+	if r.Method != http.MethodPost {
+		err := tpl.Execute(w, map[string]interface{}{
+			"TodaysDate":    time.Now().Format("2006-01-02"),
+			"Tanks":         tanks,
+			"EditGecko":     gecko,
+			"EditGeckoDate": gecko.DateOfBirth.Format("2006-01-02"),
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	gecko.TankID, _ = strconv.Atoi(r.FormValue("tankId"))
+	gecko.Description = r.FormValue("description")
+	gecko.Gender = r.FormValue("gender")
+	gecko.DateOfBirth, _ = time.Parse("2006-01-02", r.FormValue("dob"))
+	gecko.FormattedDateOfBirth = gecko.DateOfBirth.Format("02/01/2006")
+	gecko.Update()
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 func newEgg(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.New("new_egg.html").Funcs(funcMap).ParseFiles("assets/new_egg.html"))
 	if r.Method != http.MethodPost {
-		var availableGeckos []int
-		for _, gecko := range geckos {
-			availableGeckos = append(availableGeckos, gecko.ID)
-		}
 		var availableIncubators map[int]Incubator = make(map[int]Incubator)
 		for _, incubator := range incubators {
 			availableIncubators[incubator.ID] = *incubator
+		}
+		var femaleGeckos []*Gecko
+		for _, gecko := range geckos {
+			if gecko.Gender == "female" && !gecko.Deleted {
+				femaleGeckos = append(femaleGeckos, gecko)
+			}
 		}
 		geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 		if geckoId == 0 {
@@ -86,7 +137,7 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 			incubatorId = 1
 		}
 		err := tpl.Execute(w, map[string]interface{}{
-			"AvailableGeckos":     availableGeckos,
+			"AvailableGeckos":     femaleGeckos,
 			"AvailableIncubators": availableIncubators,
 			"TodaysDate":          time.Now().Format("2006-01-02"),
 			"SelectedGecko":       geckoId,
@@ -154,6 +205,22 @@ func newIncubator(w http.ResponseWriter, r *http.Request) {
 	rows, _ := strconv.Atoi(r.FormValue("rows"))
 	columns, _ := strconv.Atoi(r.FormValue("columns"))
 	AddIncubator(rows, columns)
+
+	// tpl.Execute(w, struct{ Success bool }{true})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func newTank(w http.ResponseWriter, r *http.Request) {
+	tpl := template.Must(template.ParseFiles("assets/new_tank.html"))
+	if r.Method != http.MethodPost {
+		err := tpl.Execute(w, map[string]interface{}{})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	AddTank(r.FormValue("name"))
 
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)

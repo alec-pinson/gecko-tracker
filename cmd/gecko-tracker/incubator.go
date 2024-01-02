@@ -20,7 +20,7 @@ func AddIncubator(rows int, columns int) *Incubator {
 
 	log.Println("Added new incubator, " + strconv.Itoa(incubator.ID) + ", size " + strconv.Itoa(incubator.Columns) + " x " + strconv.Itoa(incubator.Rows))
 
-	WriteToDB("incubator", Gecko{}, incubator, Egg{}, Sale{})
+	WriteToDB("incubator", Gecko{}, incubator, Egg{}, Sale{}, Tank{})
 
 	return &incubator
 }

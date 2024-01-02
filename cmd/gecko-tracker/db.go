@@ -16,9 +16,10 @@ type CouchDBDocument struct {
 	Incubator Incubator
 	Egg       Egg
 	Sale      Sale
+	Tank      Tank
 }
 
-func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale) {
+func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale, tank Tank) {
 	u, err := url.Parse(config.Database.Url)
 	if err != nil {
 		panic(err)
@@ -38,6 +39,7 @@ func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale 
 		Incubator: incubator,
 		Egg:       egg,
 		Sale:      sale,
+		Tank:      tank,
 	}
 	result, err := db.Post(doc)
 	if err != nil {
@@ -99,6 +101,7 @@ func LoadFromDB() {
 				Incubator: data.Incubator,
 				Egg:       data.Egg,
 				Sale:      data.Sale,
+				Tank:      data.Tank,
 			}
 
 			_, err := dbBackup.Post(doc)
@@ -111,9 +114,11 @@ func LoadFromDB() {
 		case dataType == "egg":
 			LoadEgg(data.Egg.ID, data.Egg.IncubatorID, data.Egg.Incubator.Row, data.Egg.Incubator.Column, data.Egg.GeckoID, data.Egg.Count, data.Egg.FormattedLayDate, data.Egg.FormattedHatchDateETA, data.Egg.HasHatched)
 		case dataType == "gecko":
-			LoadGecko(data.Gecko.ID, data.Gecko.Description)
+			LoadGecko(data.Gecko.ID, data.Gecko.Description, data.Gecko.TankID, data.Gecko.Gender, data.Gecko.FormattedDateOfBirth, data.Gecko.Deleted)
 		case dataType == "incubator":
 			LoadIncubator(data.Incubator.ID, data.Incubator.Rows, data.Incubator.Columns)
+		case dataType == "tank":
+			LoadTank(data.Tank.ID, data.Tank.Name)
 		case dataType == "sale":
 			LoadSale(data.Sale.Buyer, data.Sale.Source, data.Sale.Male, data.Sale.Female, data.Sale.Baby, data.Sale.TotalPrice, data.Sale.Date)
 		default:
@@ -122,7 +127,7 @@ func LoadFromDB() {
 	}
 }
 
-func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale) {
+func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale, tank Tank) {
 	u, err := url.Parse(config.Database.Url)
 	if err != nil {
 		panic(err)
@@ -146,11 +151,19 @@ func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale S
 				if _, err = db.Delete(&data.Document); err != nil {
 					panic(err)
 				}
-				WriteToDB(dataType, gecko, incubator, egg, sale)
+				WriteToDB(dataType, gecko, incubator, egg, sale, tank)
 			}
 		case dataType == "gecko":
-
+			if data.Gecko.ID == gecko.ID {
+				db.Get(&data.Document, row.ID)
+				if _, err = db.Delete(&data.Document); err != nil {
+					panic(err)
+				}
+				WriteToDB(dataType, gecko, incubator, egg, sale, tank)
+			}
 		case dataType == "incubator":
+
+		case dataType == "tank":
 
 		case dataType == "sale":
 

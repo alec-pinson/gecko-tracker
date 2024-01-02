@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Gecko Egg Tracker</title>
+    <title>Gecko Tracker</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="styles.css"/>
@@ -14,6 +14,7 @@
       <nav class="navbar">
         <a href="newGecko" class="link">New Gecko</a>
         <a href="newIncubator" class="link">New Incubator</a>
+        <a href="newTank" class="link">New Tank</a>
         <a href="newEgg" class="link">New Egg</a>
         <a href="newSale" class="link">New Sale</a>
         <p></p>
@@ -28,6 +29,7 @@
 
     {{ range $_, $incubator := .Incubators }}
     <div class="table-container">
+      <b><u>Incubator {{ $incubator.ID }}</u></b>
       <table>
         {{ $sortedEggs := sortEggsIntoGrid $.Eggs}}
         {{ range $_, $row := N 1 $incubator.Rows }}
@@ -57,7 +59,35 @@ Hatch ETA: {{ $egg.FormattedHatchDateETA }}
         {{ end }}
       </table>
     </div>
+    <p></p>
     {{ end }}
+
+    {{ range $_, $tank := .Tanks }}
+    <b><u>Tank {{ $tank.ID }}{{ if ne $tank.Name "" }} ({{ $tank.Name }}){{ end }}</u></b><br>
+    <div class="table-container">
+    <table>
+      <tr>
+        <th>Gender</th>
+        <th>Date of Birth</th>
+        <th>Age</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+      {{ range $_, $gecko := $tank.Geckos }}
+      <tr>
+          <td>{{ $gecko.Gender | Title }}</td>
+          <td>{{ $gecko.FormattedDateOfBirth }}</td>
+          <td>{{ $gecko.Age }}</td>
+          <td>{{ $gecko.Description }}</td>
+          <td><a href="editGecko?geckoId={{$gecko.ID}}"><img src="/images/edit.png" alt="edit" width="20" height="20"></a></td>
+      </tr>
+      {{ end }}
+    </table>
+    <b>Number of Geckos:</b> {{ len $tank.Geckos }}
+    <p></p>
+
+    {{ end }}
+    </div>
 
   </body>
 </html>

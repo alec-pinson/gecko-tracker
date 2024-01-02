@@ -3,27 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Gecko</title>
+    <title>Add Tank</title>
     <link rel="stylesheet" type="text/css" href="styles.css"/>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
     <!-- Link to the CSS file -->
   </head>
   <body>
     <div class="container">
-      <h1>Add gecko</h1>
+      <h1>Add Tank</h1>
       <form method="POST">
-        <label>Gecko</label><br />
-        <input
-          type="number"
-          name="geckoId"
-          min="1"
-          max="6"
-          value="1"
-          required
-        /><br />
 
-        <label>Description:</label><br />
-        <textarea name="description"></textarea><br /><br />
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name"><br />
 
         <button type="submit">Submit</button>
       </form>

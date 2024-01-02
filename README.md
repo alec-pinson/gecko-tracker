@@ -1,5 +1,5 @@
-# egg-tracker
-Used to track my geckos egg laying + hatching
+# gecko-tracker
+Used to track my geckos + egg laying + hatching
 
 ![screenshot-main-page](assets/screenshot-home.png)<br>
 ![screenshot-add-gecko](assets/screenshot-add-gecko.png)<br>
