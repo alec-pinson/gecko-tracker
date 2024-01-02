@@ -31,7 +31,7 @@
           {{end}}
         </select>
 
-        <label for="gender">Tank</label>
+        <label for="gender">Gender</label>
         <select id="gender" name="gender" required>
           <option value="male" {{ if eq $.EditGecko.Gender "male" }}selected="selected"{{ end }}>Male</option>
           <option value="female" {{ if eq $.EditGecko.Gender "female" }}selected="selected"{{ end }}>Female</option>
