@@ -123,7 +123,7 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		}
 		var femaleGeckos []*Gecko
 		for _, gecko := range geckos {
-			if gecko.Gender == "female" {
+			if gecko.Gender == "female" && !gecko.Deleted {
 				femaleGeckos = append(femaleGeckos, gecko)
 			}
 		}

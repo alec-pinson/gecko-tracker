@@ -20,7 +20,7 @@ func GetNextLayDateInfo() NextLayDate {
 	var geckoId int = 0
 	var geckoDescription string = ""
 	for _, gecko := range geckos {
-		if gecko.Gender == "female" {
+		if gecko.Gender == "female" && !gecko.Deleted {
 			if gecko.GetLayETA().Before(LayETA) {
 				LayETA = gecko.GetLayETA()
 				geckoId = gecko.ID
