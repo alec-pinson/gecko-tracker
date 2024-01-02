@@ -42,7 +42,7 @@
         <label for="dob">Date of Birth</label>
         <input type="date" id="dob" name="dob" value="{{ if .EditGecko }}{{ .EditGeckoDate }}{{else}}{{ .TodaysDate }}{{end}}" required />
 
-        <button type="submit">Submit</button>
+        <button type="submit">Submit</button> {{ if .EditGecko}}<button type="button" onclick="location.href='/deleteGecko?geckoId={{.EditGecko.ID}}'">Delete</button>{{ end }}
       </form>
     </div>
   </body>

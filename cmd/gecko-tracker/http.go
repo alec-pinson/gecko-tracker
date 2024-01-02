@@ -27,6 +27,13 @@ type TemplateData struct {
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Path == "/deleteGecko" {
+		geckoId, _ := strconv.Atoi(r.FormValue("geckoId"))
+		gecko, _ := GetGecko(geckoId)
+		gecko.Delete()
+	}
+
 	var incubatingEggs []Egg
 	for _, egg := range eggs {
 		if !egg.HasHatched {

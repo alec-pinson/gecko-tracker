@@ -47,7 +47,7 @@ func (tank Tank) GetTankContents() TankContents {
 	tankContents.ID = tank.ID
 	tankContents.Name = tank.Name
 	for _, gecko := range geckos {
-		if gecko.TankID == tank.ID {
+		if gecko.TankID == tank.ID && !gecko.Deleted {
 			gecko.Age = GetAge(gecko.DateOfBirth)
 			tankContentsGeckos = append(tankContentsGeckos, gecko)
 		}

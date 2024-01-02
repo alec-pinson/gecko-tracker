@@ -15,6 +15,7 @@ type Gecko struct {
 	DateOfBirth          time.Time
 	FormattedDateOfBirth string `json:"formattedDateOfBirth"`
 	Age                  string
+	Deleted              bool `json:"deleted"`
 }
 
 var LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later
@@ -38,6 +39,7 @@ func AddGecko(description string, tankId int, gender string, dateOfBirth string)
 	}
 	gecko.DateOfBirth = DateOfBirth
 	gecko.FormattedDateOfBirth = dateOfBirth
+	gecko.Deleted = false
 	geckos = append(geckos, &gecko)
 
 	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(gecko.ID) + ")")
@@ -47,7 +49,7 @@ func AddGecko(description string, tankId int, gender string, dateOfBirth string)
 	return &gecko, nil
 }
 
-func LoadGecko(id int, description string, tankId int, gender string, dateOfBirth string) (*Gecko, error) {
+func LoadGecko(id int, description string, tankId int, gender string, dateOfBirth string, deleted bool) (*Gecko, error) {
 	var gecko Gecko
 	gecko.ID = id
 	gecko.Description = description
@@ -59,6 +61,7 @@ func LoadGecko(id int, description string, tankId int, gender string, dateOfBirt
 	}
 	gecko.DateOfBirth = DateOfBirth
 	gecko.FormattedDateOfBirth = dateOfBirth
+	gecko.Deleted = deleted
 	geckos = append(geckos, &gecko)
 
 	log.Println("Loaded gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
@@ -69,6 +72,14 @@ func LoadGecko(id int, description string, tankId int, gender string, dateOfBirt
 func (gecko *Gecko) Update() {
 	UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{})
 	log.Print("Updated gecko '" + gecko.Description + "' (id: " + strconv.Itoa(gecko.ID) + ")")
+}
+
+func (gecko *Gecko) Delete() {
+	if !gecko.Deleted {
+		gecko.Deleted = true
+		UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{})
+		log.Print("Marked gecko '" + gecko.Description + "' (id: " + strconv.Itoa(gecko.ID) + ") as deleted")
+	}
 }
 
 func GetGecko(id int) (*Gecko, error) {

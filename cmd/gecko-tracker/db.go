@@ -113,7 +113,7 @@ func LoadFromDB() {
 		case dataType == "egg":
 			LoadEgg(data.Egg.ID, data.Egg.IncubatorID, data.Egg.Incubator.Row, data.Egg.Incubator.Column, data.Egg.GeckoID, data.Egg.Count, data.Egg.FormattedLayDate, data.Egg.FormattedHatchDateETA, data.Egg.HasHatched)
 		case dataType == "gecko":
-			LoadGecko(data.Gecko.ID, data.Gecko.Description, data.Gecko.TankID, data.Gecko.Gender, data.Gecko.FormattedDateOfBirth)
+			LoadGecko(data.Gecko.ID, data.Gecko.Description, data.Gecko.TankID, data.Gecko.Gender, data.Gecko.FormattedDateOfBirth, data.Gecko.Deleted)
 		case dataType == "incubator":
 			LoadIncubator(data.Incubator.ID, data.Incubator.Rows, data.Incubator.Columns)
 		case dataType == "tank":
