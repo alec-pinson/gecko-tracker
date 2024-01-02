@@ -114,6 +114,12 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 		for _, incubator := range incubators {
 			availableIncubators[incubator.ID] = *incubator
 		}
+		var femaleGeckos []*Gecko
+		for _, gecko := range geckos {
+			if gecko.Gender == "female" {
+				femaleGeckos = append(femaleGeckos, gecko)
+			}
+		}
 		geckoId, _ := strconv.Atoi(r.FormValue("gecko"))
 		if geckoId == 0 {
 			geckoId = 1
@@ -123,7 +129,7 @@ func newEgg(w http.ResponseWriter, r *http.Request) {
 			incubatorId = 1
 		}
 		err := tpl.Execute(w, map[string]interface{}{
-			"AvailableGeckos":     geckos,
+			"AvailableGeckos":     femaleGeckos,
 			"AvailableIncubators": availableIncubators,
 			"TodaysDate":          time.Now().Format("2006-01-02"),
 			"SelectedGecko":       geckoId,
