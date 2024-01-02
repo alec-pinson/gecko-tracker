@@ -15,7 +15,7 @@
         <label for="gecko">Gecko</label>
         <select id="gecko" name="gecko" onchange="refresh()" required>
           {{range .AvailableGeckos}}
-          <option value="{{.}}" {{ if eq $.SelectedGecko . }}selected="selected"{{ end }}>Gecko {{.}}</option>
+          <option value="{{.ID}}" {{ if eq $.SelectedGecko .ID }}selected="selected"{{ end }}>Gecko {{.ID}} {{ if ne .Description "" }}({{ .Description }}){{ end }}</option>
           {{end}}
         </select>
 

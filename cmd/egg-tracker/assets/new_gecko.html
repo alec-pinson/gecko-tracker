@@ -3,27 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{ if .EditGecko }}
+    <title>Edit Gecko</title>
+    {{ else }}
     <title>Add Gecko</title>
+    {{ end }}
     <link rel="stylesheet" type="text/css" href="styles.css"/>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
     <!-- Link to the CSS file -->
   </head>
   <body>
     <div class="container">
+      {{ if .EditGecko }}
+      <h1>Edit gecko</h1>
+      {{ else }}
       <h1>Add gecko</h1>
+      {{ end }}
       <form method="POST">
-        <label>Gecko</label><br />
-        <input
-          type="number"
-          name="geckoId"
-          min="1"
-          max="6"
-          value="1"
-          required
-        /><br />
 
-        <label>Description:</label><br />
-        <textarea name="description"></textarea><br /><br />
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description"{{ if .EditGecko }} value="{{ .EditGecko.Description }}"{{ end }}><br />
+
+        <label for="tankId">Tank</label>
+        <select id="tankId" name="tankId" required>
+          {{range .Tanks}}
+          <option value="{{.ID}}" {{ if eq $.EditGecko.TankID .ID }}selected="selected"{{ end }}>{{.Name}}</option>
+          {{end}}
+        </select>
+
+        <label for="gender">Tank</label>
+        <select id="gender" name="gender" required>
+          <option value="male" {{ if eq $.EditGecko.Gender "male" }}selected="selected"{{ end }}>Male</option>
+          <option value="female" {{ if eq $.EditGecko.Gender "female" }}selected="selected"{{ end }}>Female</option>
+          <option value="baby" {{ if eq $.EditGecko.Gender "baby" }}selected="selected"{{ end }}>Baby</option>
+          <option value="unknown" {{ if eq $.EditGecko.Gender "unknown" }}selected="selected"{{ end }}>Unknown</option>
+        </select>
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" value="{{ if .EditGecko }}{{ .EditGeckoDate }}{{else}}{{ .TodaysDate }}{{end}}" required />
 
         <button type="submit">Submit</button>
       </form>

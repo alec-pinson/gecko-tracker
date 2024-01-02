@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -9,36 +8,57 @@ import (
 )
 
 type Gecko struct {
-	ID          int    `json:"id"`
-	Description string `json:"description"`
+	ID                   int    `json:"id"`
+	Description          string `json:"description"`
+	TankID               int    `json:"tankId"`
+	Gender               string `json:"gender"` // male, female, baby
+	DateOfBirth          time.Time
+	FormattedDateOfBirth string `json:"formattedDateOfBirth"`
+	Age                  string
 }
 
 var LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later
 
-func AddGecko(id int, description string) (*Gecko, error) {
-	// Check if a gecko with the same ID already exists
-	for _, existingGecko := range geckos {
-		if existingGecko.ID == id {
-			return nil, errors.New("Gecko with the same ID already exists")
-		}
-	}
+func AddGecko(description string, tankId int, gender string, dateOfBirth string) (*Gecko, error) {
+	// // Check if a gecko with the same ID already exists
+	// for _, existingGecko := range geckos {
+	// 	if existingGecko.ID == id {
+	// 		return nil, errors.New("Gecko with the same ID already exists")
+	// 	}
+	// }
 
 	var gecko Gecko
-	gecko.ID = id
+	gecko.ID = len(geckos) + 1
 	gecko.Description = description
+	gecko.TankID = tankId
+	gecko.Gender = gender
+	DateOfBirth, err := time.Parse("02/01/2006", dateOfBirth)
+	if err != nil {
+		log.Println(err)
+	}
+	gecko.DateOfBirth = DateOfBirth
+	gecko.FormattedDateOfBirth = dateOfBirth
 	geckos = append(geckos, &gecko)
 
-	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
+	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(gecko.ID) + ")")
 
-	WriteToDB("gecko", gecko, Incubator{}, Egg{}, Sale{})
+	WriteToDB("gecko", gecko, Incubator{}, Egg{}, Sale{}, Tank{})
 
 	return &gecko, nil
 }
 
-func LoadGecko(id int, description string) (*Gecko, error) {
+func LoadGecko(id int, description string, tankId int, gender string, dateOfBirth string) (*Gecko, error) {
 	var gecko Gecko
 	gecko.ID = id
 	gecko.Description = description
+	gecko.TankID = tankId
+	gecko.Gender = gender
+	DateOfBirth, err := time.Parse("02/01/2006", dateOfBirth)
+	if err != nil {
+		log.Println(err)
+	}
+	gecko.DateOfBirth = DateOfBirth
+	gecko.FormattedDateOfBirth = dateOfBirth
 	geckos = append(geckos, &gecko)
 
 	log.Println("Loaded gecko '" + description + "' (id: " + strconv.Itoa(id) + ")")
@@ -46,14 +66,19 @@ func LoadGecko(id int, description string) (*Gecko, error) {
 	return &gecko, nil
 }
 
-func GetGecko(id int) (Gecko, error) {
+func (gecko *Gecko) Update() {
+	UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{})
+	log.Print("Updated gecko '" + gecko.Description + "' (id: " + strconv.Itoa(gecko.ID) + ")")
+}
+
+func GetGecko(id int) (*Gecko, error) {
 	for _, gecko := range geckos {
 		if gecko.ID == id {
-			return *gecko, nil
+			return gecko, nil
 		}
 	}
 	log.Println("Gecko not found: " + strconv.Itoa(id))
-	return Gecko{}, fmt.Errorf("Gecko not found with ID: %d", id)
+	return &Gecko{}, fmt.Errorf("Gecko not found with ID: %d", id)
 }
 
 func (gecko Gecko) GetLastLayDate() time.Time {
