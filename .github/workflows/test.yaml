@@ -19,10 +19,10 @@ jobs:
           go-version: 1.21.3
       -
         name: Vet
-        run: cd cmd/egg-tracker && go vet
+        run: cd cmd/gecko-tracker && go vet
       -
         name: Build
-        run: cd cmd/egg-tracker && go build -v
+        run: cd cmd/gecko-tracker && go build -v
       -
         name: Test
-        run: cd cmd/egg-tracker && go test -v
+        run: cd cmd/gecko-tracker && go test -v

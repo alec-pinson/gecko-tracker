@@ -1,4 +1,4 @@
-module github.com/alec-pinson/egg-tracker
+module github.com/alec-pinson/gecko-tracker
 
 go 1.21.3
 
