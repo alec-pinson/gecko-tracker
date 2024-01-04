@@ -16,6 +16,7 @@ type Config struct {
 		BackupName string
 	}
 	Sources   []string
+	LayTime   time.Duration
 	HatchTime time.Duration
 }
 
@@ -44,6 +45,17 @@ func LoadConfiguration() {
 		config.Sources = []string{"Preloved", "Facebook"}
 	}
 	log.Println("Configured Sale Sources: " + strings.Join(config.Sources, ", "))
+
+	if os.Getenv("LAY_DAYS") != "" {
+		layTime, err := time.ParseDuration(DaysToHours(os.Getenv("LAY_DAYS"))) // lay eta 14 days, will automatically generate from average of eggs later
+		if err != nil {
+			log.Println(err)
+		}
+		config.LayTime = layTime
+	} else {
+		config.LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later
+	}
+	log.Println("Configured hatch time is " + config.HatchTime.String())
 
 	if os.Getenv("HATCH_DAYS") != "" {
 		hatchTime, err := time.ParseDuration(DaysToHours(os.Getenv("HATCH_DAYS"))) // hatch eta 60 days, will automatically generate from average of eggs later

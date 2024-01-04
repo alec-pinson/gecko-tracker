@@ -52,7 +52,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		Eggs:             incubatingEggs,
 		NextLayDate:      GetNextLayDateInfo(),
 		NextHatchDate:    GetNextHatchDateInfo(),
-		AverageHatchTime: GetAverageHatchTime(),
+		AverageHatchTime: GetAverageHatchTimeString(),
 		TotalSales:       TotalSales(),
 		Incubators:       incubators,
 		Tanks:            tankContents,
