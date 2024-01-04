@@ -20,7 +20,7 @@
         <p></p>
         <b>Next Lay Date:</b> <font color="{{ .NextLayDate.Colour }}">{{ .NextLayDate.Value }}</font><br />
         <br />
-        <b>Next Hatch Date:</b> <font color="{{ .NextHatchDate.Colour }}">{{ .NextHatchDate.Value }}</font><br />
+        <div title="Average Hatch Time: {{ .AverageHatchTime }}"><b>Next Hatch Date:</b> <font color="{{ .NextHatchDate.Colour }}">{{ .NextHatchDate.Value }}</font></div>
         <br />
         <b>Total Sales:</b> {{ .TotalSales }}<br />
         <br />
@@ -75,11 +75,11 @@ Hatch ETA: {{ $egg.FormattedHatchDateETA }}
       </tr>
       {{ range $_, $gecko := $tank.Geckos }}
       <tr>
-          <td>{{ $gecko.Gender | Title }}</td>
-          <td>{{ $gecko.FormattedDateOfBirth }}</td>
-          <td>{{ $gecko.Age }}</td>
-          <td>{{ $gecko.Description }}</td>
-          <td><a href="editGecko?geckoId={{$gecko.ID}}"><img src="/images/edit.png" alt="edit" width="20" height="20"></a></td>
+          <td class="tank-slot" {{ if eq $gecko.Gender "female" }}data-details="Average Lay Time: {{ $gecko.GetAverageLayTime }}"{{ end }}>{{ $gecko.Gender | Title }}</td>
+          <td class="tank-slot" {{ if eq $gecko.Gender "female" }}data-details="Average Lay Time: {{ $gecko.GetAverageLayTime }}"{{ end }}>{{ $gecko.FormattedDateOfBirth }}</td>
+          <td class="tank-slot" {{ if eq $gecko.Gender "female" }}data-details="Average Lay Time: {{ $gecko.GetAverageLayTime }}"{{ end }}>{{ $gecko.Age }}</td>
+          <td class="tank-slot" {{ if eq $gecko.Gender "female" }}data-details="Average Lay Time: {{ $gecko.GetAverageLayTime }}"{{ end }}>{{ $gecko.Description }}</td>
+          <td class="tank-slot" {{ if eq $gecko.Gender "female" }}data-details="Average Lay Time: {{ $gecko.GetAverageLayTime }}"{{ end }}><a href="editGecko?geckoId={{$gecko.ID}}"><img src="/images/edit.png" alt="edit" width="20" height="20"></a></td>
       </tr>
       {{ end }}
     </table>

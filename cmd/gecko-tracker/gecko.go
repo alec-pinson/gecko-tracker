@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -117,4 +118,40 @@ func (gecko Gecko) GetLayHistory() []Egg {
 	}
 
 	return eggsLaid
+}
+
+func (gecko Gecko) GetAverageLayTime() string {
+	var eggsLaid []*Egg
+	var skipFirst bool = false
+	var lastLayDate time.Time
+	var LayTimeSum, LayTotal float64
+
+	// get eggs laid by this gecko
+	for _, egg := range eggs {
+		if egg.GeckoID == gecko.ID {
+			eggsLaid = append(eggsLaid, egg)
+		}
+	}
+
+	// sort eggs by lay date
+	sort.Slice(eggsLaid, func(i, j int) bool {
+		return eggsLaid[i].LayDate.Before(eggsLaid[j].LayDate)
+	})
+
+	// get difference between lay dates
+	for _, egg := range eggsLaid {
+		// they are in order ignore if this isnt true
+		if !skipFirst {
+			skipFirst = true
+			lastLayDate = egg.LayDate
+			continue
+		}
+		LayTimeSum += egg.LayDate.Sub(lastLayDate).Hours() / 24
+		LayTotal += 1
+		lastLayDate = egg.LayDate
+	}
+
+	layTimeAverage := LayTimeSum / LayTotal
+
+	return fmt.Sprintf("%.0f days", layTimeAverage)
 }

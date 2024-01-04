@@ -17,13 +17,14 @@ var funcMap = template.FuncMap{
 }
 
 type TemplateData struct {
-	Eggs          []Egg
-	NextLayDate   NextLayDate
-	NextHatchDate NextHatchDate
-	TotalSales    string
-	Incubators    []*Incubator
-	Geckos        []*Gecko
-	Tanks         []TankContents
+	Eggs             []Egg
+	NextLayDate      NextLayDate
+	NextHatchDate    NextHatchDate
+	AverageHatchTime string
+	TotalSales       string
+	Incubators       []*Incubator
+	Geckos           []*Gecko
+	Tanks            []TankContents
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
@@ -48,12 +49,13 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := TemplateData{
-		Eggs:          incubatingEggs,
-		NextLayDate:   GetNextLayDateInfo(),
-		NextHatchDate: GetNextHatchDateInfo(),
-		TotalSales:    TotalSales(),
-		Incubators:    incubators,
-		Tanks:         tankContents,
+		Eggs:             incubatingEggs,
+		NextLayDate:      GetNextLayDateInfo(),
+		NextHatchDate:    GetNextHatchDateInfo(),
+		AverageHatchTime: GetAverageHatchTime(),
+		TotalSales:       TotalSales(),
+		Incubators:       incubators,
+		Tanks:            tankContents,
 	}
 
 	tpl := template.Must(template.New("home.html").Funcs(funcMap).ParseFiles("assets/home.html"))
