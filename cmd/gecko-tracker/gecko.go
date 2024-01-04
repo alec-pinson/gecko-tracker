@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -17,8 +18,6 @@ type Gecko struct {
 	Age                  string
 	Deleted              bool `json:"deleted"`
 }
-
-var LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later
 
 func AddGecko(description string, tankId int, gender string, dateOfBirth string) (*Gecko, error) {
 	// // Check if a gecko with the same ID already exists
@@ -105,7 +104,7 @@ func (gecko Gecko) GetLastLayDate() time.Time {
 }
 
 func (gecko Gecko) GetLayETA() time.Time {
-	return gecko.GetLastLayDate().Add(LayTime)
+	return gecko.GetLastLayDate().Add(gecko.GetAverageLayTimeDuration())
 }
 
 func (gecko Gecko) GetLayHistory() []Egg {
@@ -117,4 +116,68 @@ func (gecko Gecko) GetLayHistory() []Egg {
 	}
 
 	return eggsLaid
+}
+
+func (gecko Gecko) GetAverageLayTimeString() string {
+	ret, _, _, _ := gecko.GetAverageLayInfo()
+	return ret
+}
+
+func (gecko Gecko) GetAverageLayTimeDays() int {
+	_, ret, _, _ := gecko.GetAverageLayInfo()
+	return ret
+}
+
+func (gecko Gecko) GetAverageLayTimeDuration() time.Duration {
+	_, _, ret, _ := gecko.GetAverageLayInfo()
+	return ret
+}
+
+func (gecko Gecko) GetNextLayDate() string {
+	_, _, _, ret := gecko.GetAverageLayInfo()
+	return ret
+}
+
+func (gecko Gecko) GetAverageLayInfo() (string, int, time.Duration, string) {
+	var eggsLaid []*Egg
+	var skipFirst bool = false
+	var lastLayDate time.Time
+	var LayTimeSum, LayTotal float64
+
+	// get eggs laid by this gecko
+	for _, egg := range eggs {
+		if egg.GeckoID == gecko.ID {
+			eggsLaid = append(eggsLaid, egg)
+		}
+	}
+
+	if len(eggsLaid) == 0 {
+		// never laid any eggs before so use default lay time
+		nextLayDate := lastLayDate.Add(time.Duration(config.LayTime)).Format("02/01/2006")
+		return fmt.Sprintf("%.0f days", config.LayTime.Hours()/24), int(config.LayTime.Hours() / 24), config.LayTime, nextLayDate
+	}
+
+	// sort eggs by lay date
+	sort.Slice(eggsLaid, func(i, j int) bool {
+		return eggsLaid[i].LayDate.Before(eggsLaid[j].LayDate)
+	})
+
+	// get difference between lay dates
+	for _, egg := range eggsLaid {
+		// they are in order ignore if this isnt true
+		if !skipFirst {
+			skipFirst = true
+			lastLayDate = egg.LayDate
+			continue
+		}
+		LayTimeSum += egg.LayDate.Sub(lastLayDate).Hours() / 24
+		LayTotal += 1
+		lastLayDate = egg.LayDate
+	}
+
+	layTimeAverage := LayTimeSum / LayTotal
+
+	nextLayDate := lastLayDate.Add(time.Duration(time.Hour * 24 * time.Duration(layTimeAverage))).Format("02/01/2006")
+
+	return fmt.Sprintf("%.0f days", layTimeAverage), int(layTimeAverage), time.Duration(time.Hour * 24 * time.Duration(layTimeAverage)), nextLayDate
 }

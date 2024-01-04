@@ -91,6 +91,34 @@ td.egg-slot:hover::before {
   visibility: visible;
   opacity: 1;
 }
+
+td.tank-slot::before {
+  content: attr(data-details);
+  position: absolute;
+  width: max-content;
+  white-space: pre-wrap;
+  text-align: left;
+  top: 100%;
+  left: 0;
+  transform: translateX(0);
+  background-color: rgba(0, 0, 0, 1);
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.2;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+td.tank-slot:hover::before {
+  visibility: visible;
+  opacity: 1;
+}
+
 b {
   padding: 5px;
   margin-bottom: 5px;

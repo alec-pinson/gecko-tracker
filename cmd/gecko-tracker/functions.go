@@ -110,6 +110,39 @@ func GetNextHatchDateInfo() NextHatchDate {
 	return nextHatchDate
 }
 
+func GetAverageHatchTimeString() string {
+	ret, _, _ := GetAverageHatchTimeInfo()
+	return ret
+}
+
+func GetAverageHatchTimeDays() int {
+	_, ret, _ := GetAverageHatchTimeInfo()
+	return ret
+}
+
+func GetAverageHatchTimeDuration() time.Duration {
+	_, _, ret := GetAverageHatchTimeInfo()
+	return ret
+}
+
+func GetAverageHatchTimeInfo() (string, int, time.Duration) {
+	var hatchTimeSum, hatchedEggTotal float64
+	for _, egg := range eggs {
+		if egg.HasHatched {
+			hatchTimeSum += egg.HatchDate.Sub(egg.LayDate).Hours() / 24
+			hatchedEggTotal += 1
+		}
+	}
+
+	if hatchedEggTotal == 0 {
+		return fmt.Sprintf("%.0f days", config.HatchTime.Hours()/24), int(config.HatchTime.Hours() / 24), config.HatchTime
+	}
+
+	hatchTimeAverage := hatchTimeSum / hatchedEggTotal
+
+	return fmt.Sprintf("%.0f days", hatchTimeAverage), int(hatchTimeAverage), time.Duration(time.Hour * 24 * time.Duration(hatchTimeAverage))
+}
+
 func N(start, end int) (stream chan int) {
 	stream = make(chan int)
 	go func() {

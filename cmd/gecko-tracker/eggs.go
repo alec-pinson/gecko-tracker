@@ -108,7 +108,7 @@ func (egg *Egg) Hatched() {
 }
 
 func (egg *Egg) GetHatchETA() time.Time {
-	return egg.LayDate.Add(config.HatchTime)
+	return egg.LayDate.Add(GetAverageHatchTimeDuration())
 }
 
 func (egg *Egg) GetHatchETAString() string {
