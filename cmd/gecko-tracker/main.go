@@ -14,6 +14,8 @@ func main() {
 	LoadConfiguration()
 	LoadFromDB()
 
+	go NotificationTimer()
+
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/styles.css") })
 	http.HandleFunc("/images/favicon.ico", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/images/favicon.ico") })
 	http.HandleFunc("/images/edit.png", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "assets/images/edit.png") })

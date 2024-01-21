@@ -11,6 +11,17 @@ type NotificationTypes struct {
 	Pushover Pushover
 }
 
+func NotificationTimer() {
+	for {
+		// run at 9am
+		if time.Now().Format("15:04") == "09:00" {
+			LayDateNotifications()
+			HatchDateNotifications()
+		}
+		time.Sleep(1 * time.Minute)
+	}
+}
+
 type Pushover struct {
 	Device           string
 	Sound            string
