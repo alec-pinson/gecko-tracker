@@ -23,6 +23,14 @@ func NotificationTimer() {
 	}
 }
 
+func SendNotification(Message string) {
+	log.Println("Sending notification: " + Message)
+
+	if notifications.Pushover.Device != "" && notifications.Pushover.UserToken != "" && notifications.Pushover.APIToken != "" {
+		PushoverNotification(notifications.Pushover, Message)
+	}
+}
+
 type Pushover struct {
 	Device    string
 	Sound     string
@@ -31,8 +39,8 @@ type Pushover struct {
 }
 
 func PushoverNotification(n Pushover, Message string) {
-	app := pushover.New(n.UserToken)
-	recipient := pushover.NewRecipient(n.APIToken)
+	app := pushover.New(n.APIToken)
+	recipient := pushover.NewRecipient(n.UserToken)
 
 	message := &pushover.Message{
 		Message:    Message,
@@ -43,14 +51,6 @@ func PushoverNotification(n Pushover, Message string) {
 	_, err := app.SendMessage(message, recipient)
 	if err != nil {
 		log.Println(err)
-	}
-}
-
-func SendNotification(Message string) {
-	log.Println("Sending notification: " + Message)
-
-	if notifications.Pushover.Device != "" && notifications.Pushover.UserToken != "" && notifications.Pushover.APIToken != "" {
-		PushoverNotification(notifications.Pushover, Message)
 	}
 }
 

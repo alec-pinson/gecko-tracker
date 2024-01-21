@@ -263,6 +263,8 @@ func notificationSetup(w http.ResponseWriter, r *http.Request) {
 		notifications.Pushover.Device = r.FormValue("device")
 		notifications.Pushover.UserToken = r.FormValue("userToken")
 		notifications.Pushover.APIToken = r.FormValue("apiToken")
+
+		SendNotification("Notifications configured")
 	}
 
 	if notifications.Configured {
