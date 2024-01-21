@@ -2,7 +2,7 @@ body {
   display: block;
   position: absolute;
   top: 20px; /* Adjust the top margin as needed */
-  left: 50%;
+  left: 45%;
   transform: translateX(-50%);
   margin: 0;
   padding: 0;
@@ -146,6 +146,7 @@ textarea {
 
 input[type="text"],
 input[type="textarea"],
+input[type="password"],
 input[type="number"],
 input[type="date"] {
   width: 80%;

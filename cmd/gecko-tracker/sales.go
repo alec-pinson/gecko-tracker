@@ -34,7 +34,7 @@ func AddSale(buyer string, source string, male int, female int, baby int, totalP
 
 	log.Println("Added new sale £" + strconv.Itoa(sale.TotalPrice))
 
-	WriteToDB("sale", Gecko{}, Incubator{}, Egg{}, sale, Tank{})
+	WriteToDB("sale", Gecko{}, Incubator{}, Egg{}, sale, Tank{}, Notifications{})
 
 	return &sale
 }

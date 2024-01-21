@@ -245,3 +245,35 @@ func hasHatched(w http.ResponseWriter, r *http.Request) {
 	// tpl.Execute(w, struct{ Success bool }{true})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
+func notificationSetup(w http.ResponseWriter, r *http.Request) {
+	tpl := template.Must(template.ParseFiles("assets/notifications.html"))
+	if r.Method != http.MethodPost {
+		err := tpl.Execute(w, map[string]interface{}{})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	notificationType := r.FormValue("notificationType")
+
+	switch notificationType {
+	case "pushover":
+		notifications.Pushover.Device = r.FormValue("device")
+		notifications.Pushover.UserToken = r.FormValue("userToken")
+		notifications.Pushover.APIToken = r.FormValue("apiToken")
+
+		SendNotification("Notifications configured")
+	}
+
+	if notifications.Configured {
+		UpdateDB("notifications", Gecko{}, Incubator{}, Egg{}, Sale{}, Tank{}, notifications)
+	} else {
+		notifications.Configured = true
+		WriteToDB("notifications", Gecko{}, Incubator{}, Egg{}, Sale{}, Tank{}, notifications)
+	}
+
+	// tpl.Execute(w, struct{ Success bool }{true})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}

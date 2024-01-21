@@ -25,7 +25,7 @@ func AddTank(name string) *Tank {
 
 	log.Println("Added new tank, " + name + " (" + strconv.Itoa(tank.ID) + ")")
 
-	WriteToDB("tank", Gecko{}, Incubator{}, Egg{}, Sale{}, tank)
+	WriteToDB("tank", Gecko{}, Incubator{}, Egg{}, Sale{}, tank, Notifications{})
 
 	return &tank
 }
