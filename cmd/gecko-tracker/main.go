@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -9,10 +10,14 @@ var incubators []*Incubator
 var tanks []*Tank
 var eggs []*Egg
 var sales []*Sale
+var notifications Notifications
 
 func main() {
 	LoadConfiguration()
 	LoadFromDB()
+
+	log.Println(notifications.Pushover.APIToken)
+	log.Println(notifications)
 
 	go NotificationTimer()
 
@@ -27,5 +32,6 @@ func main() {
 	http.HandleFunc("/editGecko", editGecko)
 	http.HandleFunc("/newSale", newSale)
 	http.HandleFunc("/hasHatched", hasHatched)
+	http.HandleFunc("/notifications", notificationSetup)
 	http.ListenAndServe(":8080", nil)
 }

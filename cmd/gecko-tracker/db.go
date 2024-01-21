@@ -11,15 +11,16 @@ import (
 // create your own document
 type CouchDBDocument struct {
 	couchdb.Document
-	Type      string
-	Gecko     Gecko
-	Incubator Incubator
-	Egg       Egg
-	Sale      Sale
-	Tank      Tank
+	Type          string
+	Gecko         Gecko
+	Incubator     Incubator
+	Egg           Egg
+	Sale          Sale
+	Tank          Tank
+	Notifications Notifications
 }
 
-func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale, tank Tank) {
+func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale, tank Tank, notifications Notifications) {
 	u, err := url.Parse(config.Database.Url)
 	if err != nil {
 		panic(err)
@@ -34,12 +35,13 @@ func WriteToDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale 
 	// use database and create a document
 	db := client.Use(config.Database.Name)
 	doc := &CouchDBDocument{
-		Type:      dataType,
-		Gecko:     gecko,
-		Incubator: incubator,
-		Egg:       egg,
-		Sale:      sale,
-		Tank:      tank,
+		Type:          dataType,
+		Gecko:         gecko,
+		Incubator:     incubator,
+		Egg:           egg,
+		Sale:          sale,
+		Tank:          tank,
+		Notifications: notifications,
 	}
 	result, err := db.Post(doc)
 	if err != nil {
@@ -96,12 +98,13 @@ func LoadFromDB() {
 		// creates a copy of the db
 		if config.Database.BackupName != "" {
 			doc := &CouchDBDocument{
-				Type:      data.Type,
-				Gecko:     data.Gecko,
-				Incubator: data.Incubator,
-				Egg:       data.Egg,
-				Sale:      data.Sale,
-				Tank:      data.Tank,
+				Type:          data.Type,
+				Gecko:         data.Gecko,
+				Incubator:     data.Incubator,
+				Egg:           data.Egg,
+				Sale:          data.Sale,
+				Tank:          data.Tank,
+				Notifications: data.Notifications,
 			}
 
 			_, err := dbBackup.Post(doc)
@@ -121,13 +124,16 @@ func LoadFromDB() {
 			LoadTank(data.Tank.ID, data.Tank.Name)
 		case dataType == "sale":
 			LoadSale(data.Sale.Buyer, data.Sale.Source, data.Sale.Male, data.Sale.Female, data.Sale.Baby, data.Sale.TotalPrice, data.Sale.Date)
+		case dataType == "notifications":
+			notifications = data.Notifications
+			log.Print("Loaded notification configuration")
 		default:
 			log.Println("Unknown data type: " + dataType)
 		}
 	}
 }
 
-func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale, tank Tank) {
+func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale Sale, tank Tank, notifications Notifications) {
 	u, err := url.Parse(config.Database.Url)
 	if err != nil {
 		panic(err)
@@ -151,7 +157,7 @@ func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale S
 				if _, err = db.Delete(&data.Document); err != nil {
 					panic(err)
 				}
-				WriteToDB(dataType, gecko, incubator, egg, sale, tank)
+				WriteToDB(dataType, gecko, incubator, egg, sale, tank, notifications)
 			}
 		case dataType == "gecko":
 			if data.Gecko.ID == gecko.ID {
@@ -159,7 +165,7 @@ func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale S
 				if _, err = db.Delete(&data.Document); err != nil {
 					panic(err)
 				}
-				WriteToDB(dataType, gecko, incubator, egg, sale, tank)
+				WriteToDB(dataType, gecko, incubator, egg, sale, tank, notifications)
 			}
 		case dataType == "incubator":
 
@@ -167,6 +173,12 @@ func UpdateDB(dataType string, gecko Gecko, incubator Incubator, egg Egg, sale S
 
 		case dataType == "sale":
 
+		case dataType == "notifications":
+			db.Get(&data.Document, row.ID)
+			if _, err = db.Delete(&data.Document); err != nil {
+				panic(err)
+			}
+			WriteToDB(dataType, gecko, incubator, egg, sale, tank, notifications)
 		default:
 			log.Println("Unknown data type: " + dataType)
 		}

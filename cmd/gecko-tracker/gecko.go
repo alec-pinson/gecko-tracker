@@ -43,7 +43,7 @@ func AddGecko(description string, tankId int, gender string, dateOfBirth string)
 
 	log.Println("Added gecko '" + description + "' (id: " + strconv.Itoa(gecko.ID) + ")")
 
-	WriteToDB("gecko", gecko, Incubator{}, Egg{}, Sale{}, Tank{})
+	WriteToDB("gecko", gecko, Incubator{}, Egg{}, Sale{}, Tank{}, Notifications{})
 
 	return &gecko, nil
 }
@@ -69,14 +69,14 @@ func LoadGecko(id int, description string, tankId int, gender string, dateOfBirt
 }
 
 func (gecko *Gecko) Update() {
-	UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{})
+	UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{}, Notifications{})
 	log.Print("Updated gecko '" + gecko.Description + "' (id: " + strconv.Itoa(gecko.ID) + ")")
 }
 
 func (gecko *Gecko) Delete() {
 	if !gecko.Deleted {
 		gecko.Deleted = true
-		UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{})
+		UpdateDB("gecko", *gecko, Incubator{}, Egg{}, Sale{}, Tank{}, Notifications{})
 		log.Print("Marked gecko '" + gecko.Description + "' (id: " + strconv.Itoa(gecko.ID) + ") as deleted")
 	}
 }

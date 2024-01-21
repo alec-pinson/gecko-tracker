@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
+    <!-- Link to the CSS file -->
+  </head>
+  <body>
+    <div class="container">
+      <h1>Notifications</h1>
+      <form method="POST">
+
+        <label for="notificationType">Notification Type</label>
+        <select id="notificationType" name="notificationType" required>
+          <option value="pushover">Pushover</option>
+        </select>
+
+        <label for="device">Device</label>
+        <input type="text" id="device" name="device" required/>
+  
+        <label for="userToken">User Token</label>
+        <input type="password" id="userToken" name="userToken" required/>
+
+        <label for="apiToken">API Token</label>
+        <input type="password" id="apiToken" name="apiToken" required/>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>

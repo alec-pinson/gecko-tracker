@@ -7,8 +7,9 @@ import (
 	"github.com/gregdel/pushover"
 )
 
-type NotificationTypes struct {
-	Pushover Pushover
+type Notifications struct {
+	Configured bool
+	Pushover   Pushover
 }
 
 func NotificationTimer() {
@@ -23,11 +24,10 @@ func NotificationTimer() {
 }
 
 type Pushover struct {
-	Device           string
-	Sound            string
-	UserToken        string
-	APIToken         string
-	LastNotification time.Time
+	Device    string
+	Sound     string
+	UserToken string
+	APIToken  string
 }
 
 func PushoverNotification(n Pushover, Message string) {
@@ -37,7 +37,7 @@ func PushoverNotification(n Pushover, Message string) {
 	message := &pushover.Message{
 		Message:    Message,
 		DeviceName: n.Device,
-		Sound:      n.Sound,
+		// Sound:      n.Sound,
 	}
 
 	_, err := app.SendMessage(message, recipient)
@@ -48,6 +48,10 @@ func PushoverNotification(n Pushover, Message string) {
 
 func SendNotification(Message string) {
 	log.Println("Sending notification: " + Message)
+
+	if notifications.Pushover.Device != "" && notifications.Pushover.UserToken != "" && notifications.Pushover.APIToken != "" {
+		PushoverNotification(notifications.Pushover, Message)
+	}
 }
 
 func LayDateNotifications() {
