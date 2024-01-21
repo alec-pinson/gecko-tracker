@@ -3,6 +3,7 @@ module github.com/alec-pinson/gecko-tracker
 go 1.21.3
 
 require (
+	github.com/gregdel/pushover v1.3.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/zemirco/couchdb v0.0.0-20170316052722-83ed906ea1f0
 )
