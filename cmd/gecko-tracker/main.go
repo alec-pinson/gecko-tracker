@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -15,9 +14,6 @@ var notifications Notifications
 func main() {
 	LoadConfiguration()
 	LoadFromDB()
-
-	log.Println(notifications.Pushover.APIToken)
-	log.Println(notifications)
 
 	go NotificationTimer()
 
