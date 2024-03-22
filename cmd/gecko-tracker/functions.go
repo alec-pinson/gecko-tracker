@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -296,4 +297,13 @@ func GetAge(d time.Time) string {
 	}
 
 	return ""
+}
+
+func toJson(val any) string {
+	b, err := json.Marshal(val)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	return string(b)
 }

@@ -37,3 +37,10 @@ Default = `60d`
 ```
 export HATCH_DAYS="2d"
 ```
+
+## backup / copy database
+
+Setting the below environment variable will force the app to create a copy of the database with this name
+```
+DATABASE_BACKUP_NAME="eggs-backup"
+```

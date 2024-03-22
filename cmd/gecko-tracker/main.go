@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -29,5 +30,11 @@ func main() {
 	http.HandleFunc("/newSale", newSale)
 	http.HandleFunc("/hasHatched", hasHatched)
 	http.HandleFunc("/notifications", notificationSetup)
-	http.ListenAndServe(":8080", nil)
+	// APIs
+	http.HandleFunc("/api/nextLay", apiNextLay)
+	http.HandleFunc("/api/nextHatch", apiNextHatch)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Println(err)
+	}
 }

@@ -55,7 +55,7 @@ func LoadConfiguration() {
 	} else {
 		config.LayTime, _ = time.ParseDuration("336h") // lay eta 14 days, will automatically generate from average of eggs later
 	}
-	log.Println("Configured hatch time is " + config.HatchTime.String())
+	log.Println("Configured lay time is " + config.LayTime.String())
 
 	if os.Getenv("HATCH_DAYS") != "" {
 		hatchTime, err := time.ParseDuration(DaysToHours(os.Getenv("HATCH_DAYS"))) // hatch eta 60 days, will automatically generate from average of eggs later
